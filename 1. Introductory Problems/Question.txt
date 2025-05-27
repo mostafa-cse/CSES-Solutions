@@ -1,0 +1,2 @@
+Your task is to count for k = 1,2,...,n the number of ways X knights can be placed on a kxk chessboard so that they do not attack each other.
+here X can be any Positive integer number.
