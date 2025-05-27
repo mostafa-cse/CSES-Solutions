@@ -12,16 +12,8 @@ all Formula:
 #include<bits/stdc++.h>
 #define int long long
 using namespace std;
-#define all(x) x.begin(), x.end()
-string cdn[2] = {"YES", "NO"};
-#ifndef ONLINE_JUDGE
-#define dout(...) cerr << "Line:" << __LINE__ << " [" << #__VA_ARGS__ << "] = ["; _print(__VA_ARGS__)
-#else
-#define dout(...)
-#endif
+
 int32_t main() {
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);  cout.tie(0);
     int n;
     cin >> n;
  
@@ -32,3 +24,4 @@ int32_t main() {
         cout << total - attacking << endl;
     }
     return 0;
+}
