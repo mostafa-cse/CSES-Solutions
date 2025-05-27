@@ -18,7 +18,7 @@ int32_t main() {
     cin >> n;
  
     for (int i = 1; i <= n; ++i) {
-        int total = i * i * (i * i - 1) / 2;
+        int total = pow(i, 2) * (pow(i, 2) - 1) / 2;
         int attacking = 4 * (i - 1) * (i - 2);
  
         cout << total - attacking << endl;
