@@ -11,14 +11,14 @@ int calc (int n) {
     for (int y = 0; y < 2; y++) {
         for (int x = 0; x < n - 2; x++) {
             int poss = n * n - 1;
-            poss -= isV(n, x + 1, y + 2);
-            poss -= isV(n, x - 1, y + 2);
-            poss -= isV(n, x + 1, y - 2);
-            poss -= isV(n, x - 1, y - 2);
-            poss -= isV(n, x + 2, y + 1);
-            poss -= isV(n, x + 2, y - 1);
-            poss -= isV(n, x - 2, y + 1);
-            poss -= isV(n, x - 2, y - 1);
+            poss -= isV(n, x + 1, y + 2); // up - right
+            poss -= isV(n, x - 1, y + 2); // up - left
+            poss -= isV(n, x + 1, y - 2); // down - right
+            poss -= isV(n, x - 1, y - 2); // down - left
+            poss -= isV(n, x + 2, y + 1); // right - up
+            poss -= isV(n, x + 2, y - 1); // right - down
+            poss -= isV(n, x - 2, y + 1); // left - up
+            poss -= isV(n, x - 2, y - 1); // left - down
             res += poss;
         }
     }
