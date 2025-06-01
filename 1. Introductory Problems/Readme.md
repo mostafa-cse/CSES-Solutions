@@ -99,7 +99,7 @@ cses-intro/
 │   └── Solution2.cpp
 |
 └── 24.Grid Paths/ 
-│   └── Solution1.cpp
+    └── Solution1.cpp
 ```
 ---
 
