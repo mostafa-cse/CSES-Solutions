@@ -1,22 +1,28 @@
-#include <iostream>
+#include <bits/stdc++.h>
+#define int long long
 using namespace std;
 
-int josephus(int n)
-{
-    if (n == 1)
-        return 1;
-    if (n % 2 == 0)
-        return 2 * josephus(n / 2) - 1;
-    else
-        return 2 * josephus(n / 2) + 1;
-}
-
-int main()
-{
+signed main() {
     int n;
     cin >> n;
-    for (int i = 1; i <= n; i++)
-        cout << josephus(i) << " ";
-    cout << endl;
+
+    set<int> s;
+    for (int i = 1; i <= n; i++) {
+        s.insert(i);
+    }
+
+    int flag = false;
+    int cnt = 1;
+    while (s.size() > 1) {
+        set<int> q;
+        for (auto i : s) {
+            if (~cnt & 1) q.insert(i), cout << i << " ";
+            cnt++;
+        }
+        for (auto i : q) {
+            s.erase(i);
+        }
+    }
+    cout << *s.begin() << endl;
     return 0;
 }
