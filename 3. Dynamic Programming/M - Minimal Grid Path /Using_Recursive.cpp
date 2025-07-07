@@ -17,8 +17,7 @@ signed main()
     }
 
     function<string(int, int)> rec = [&](int i, int j) -> string {
-        if (i >= n or j >= n)
-            return "zzzzzzzzzzzzzzz";
+        
 
         
     };
