@@ -26,24 +26,27 @@ Each folder contains the solutions to CSES problems grouped by topic:
 
 ## 📂 CSES Problem Set – Folder Structure
 
-- 1. [1. Introductory Problems](./1.%20Introductory%20Problems)  
-- 2. [2. Sorting and Searching](./2.%20Sorting%20and%20Searching)  
-- 3. [3. Dynamic Programming](./3.%20Dynamic%20Programming)
-- [Graph_Algorithms](./Graph_Algorithms)
-- [Tree_Algorithms](./Tree_Algorithms)
-- [Range_Queries](./Range_Queries)
-- [Mathematics](./Mathematics)
-- [String_Algorithms](./String_Algorithms)
-- [Geometry](./Geometry)
-- [Advanced_Techniques](./Advanced_Techniques)
-- [Sliding_Window_Problems](./Sliding_Window_Problems)
-- [Interactive_Problems](./Interactive_Problems)
-- [Bitwise_Operations](./Bitwise_Operations)
-- [Construction_Problems](./Construction_Problems)
-- [Advanced_Graph_Problems](./Advanced_Graph_Problems)
-- [Counting_Problems](./Counting_Problems)
-- [Additional_Problems_I](./Additional_Problems_I)
-- [Additional_Problems_II](./Additional_Problems_II)
+## 📂 CSES Problem Set – Folder Structure
+
+1. [1. Introductory Problems](./1.%20Introductory%20Problems)  
+2. [2. Sorting and Searching](./2.%20Sorting%20and%20Searching)  
+3. [3. Dynamic Programming](./3.%20Dynamic%20Programming)  
+4. [4. Graph Algorithms](./4.%20Graph%20Algorithms)  
+5. [5. Tree Algorithms](./5.%20Tree%20Algorithms)  
+6. [6. Range Queries](./6.%20Range%20Queries)  
+7. [7. Mathematics](./7.%20Mathematics)  
+8. [8. String Algorithms](./8.%20String%20Algorithms)  
+9. [9. Geometry](./9.%20Geometry)  
+10. [10. Advanced Techniques](./10.%20Advanced%20Techniques)  
+11. [11. Sliding Window Problems](./11.%20Sliding%20Window%20Problems)  
+12. [12. Interactive Problems](./12.%20Interactive%20Problems)  
+13. [13. Bitwise Operations](./13.%20Bitwise%20Operations)  
+14. [14. Construction Problems](./14.%20Construction%20Problems)  
+15. [15. Advanced Graph Problems](./15.%20Advanced%20Graph%20Problems)  
+16. [16. Counting Problems](./16.%20Counting%20Problems)  
+17. [17. Additional Problems I](./17.%20Additional%20Problems%20I)  
+18. [18. Additional Problems II](./18.%20Additional%20Problems%20II)
+
 
 ---
 
