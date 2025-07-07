@@ -20,7 +20,7 @@ This repository is aimed at:
 ## 📂 Folder Structure
 
 Solutions are grouped by topic and named by problem title or ID.
-
+```cpp
 cses-workbook-solutions/
 │
 ├── Introductory_Problems/
@@ -61,7 +61,7 @@ cses-workbook-solutions/
 │
 ├── LICENSE
 └── README.md
-
+```
 
 ---
 
