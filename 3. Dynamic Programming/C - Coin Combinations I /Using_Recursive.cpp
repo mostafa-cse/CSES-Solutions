@@ -17,6 +17,8 @@ int rec(int s) {
     return dp[s] = ans;
 }
 signed main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0), cout.tie(0);
     cin >> n >> x;
 
     for (int i = 0; i < n; i++) {

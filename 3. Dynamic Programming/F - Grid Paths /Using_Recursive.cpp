@@ -2,9 +2,8 @@
 #define int long long
 using namespace std;
 const int Mod = 1e9 + 7;
-int n;
 char g[1001][1001];
-int dp[1001][1001];
+int n, dp[1001][1001];
 int rec(int i, int j) {
     if (i < 0 or j < 0 or g[i][j] == '*') return 0;
     if (i == 0 and j == 0) {
@@ -14,6 +13,8 @@ int rec(int i, int j) {
     return dp[i][j] = (rec(i - 1, j) + rec(i, j - 1)) % Mod;
 }
 signed main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0), cout.tie(0);
     cin >> n;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {

@@ -28,6 +28,8 @@ int rec(int i, int j, vector<int> &a, vector<vector<int>>&dp) {
     }
 }
 int32_t main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0), cout.tie(0);
     cin >> n >> m;
     vector<int>a(n + 1);
     for(int i = 1; i <= n; i++) {

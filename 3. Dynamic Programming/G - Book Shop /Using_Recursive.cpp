@@ -15,6 +15,9 @@ int memoi(int N, int k) {
     return res;
 }
 int32_t main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0), cout.tie(0);
+
     cin >> n >> k;
     for (int i = 0; i < n; i++) {
         cin >> price[i];

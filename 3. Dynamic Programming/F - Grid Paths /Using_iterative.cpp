@@ -5,8 +5,7 @@ const int MOD = 1e9 + 7 , INF = 1e9;
 
 signed main() {
     ios::sync_with_stdio(false);
-    cin.tie(0);
-    cout.tie(0);
+    cin.tie(0), cout.tie(0);
 
     int n;
     cin >> n;

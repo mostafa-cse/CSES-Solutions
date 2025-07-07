@@ -4,6 +4,8 @@ using namespace std;
 const int Mod = 1e9 + 7;
 
 signed main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0), cout.tie(0);
     int n, target;
     cin >> n >> target;
 

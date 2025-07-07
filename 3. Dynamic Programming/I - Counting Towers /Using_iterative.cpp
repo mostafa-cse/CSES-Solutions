@@ -1,14 +1,16 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define ll long long
+#define int long long
  
-const ll mod = 1e9 + 7;
-const ll N = 1e6 + 10;
-ll one[N], two[N];
+const int mod = 1e9 + 7;
+const int N = 1e6 + 10;
+int one[N], two[N];
 
-int main() {
+int32_t main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0), cout.tie(0);
+
     one[1] = two[1] = 1;
- 
     for (int i = 2; i < N; i++) {
         one[i] = (2 * one[i - 1] + two[i - 1]) % mod;
         two[i] = (4 * two[i - 1] + one[i - 1]) % mod;

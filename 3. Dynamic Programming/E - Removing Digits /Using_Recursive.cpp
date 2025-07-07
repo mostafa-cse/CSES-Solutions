@@ -18,6 +18,8 @@ int rec(int num) {
     return dp[num] = ans;
 }
 signed main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0), cout.tie(0);
     int n;
     cin >> n;
 

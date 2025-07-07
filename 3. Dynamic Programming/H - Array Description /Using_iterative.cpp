@@ -42,6 +42,8 @@ void tabu(vector<int>&a) {
     cout << ans << endl;
 }
 int32_t main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0), cout.tie(0);
     cin >> n >> m;
     vector<int>a(n + 1);
     for(int i = 0; i < n; i++) {

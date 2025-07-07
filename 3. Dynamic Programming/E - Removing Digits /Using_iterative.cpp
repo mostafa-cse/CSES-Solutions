@@ -5,6 +5,9 @@ const int M = 1e6 + 6;
 int dp[M];
 
 signed main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0), cout.tie(0);
+
     int n;
     cin >> n;
     for (int i = 1; i < M; i++) dp[i] = 1e18;

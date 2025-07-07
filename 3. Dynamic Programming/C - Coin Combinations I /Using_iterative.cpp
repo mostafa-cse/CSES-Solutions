@@ -1,10 +1,12 @@
 #include <bits/stdc++.h>
 #define int long long
 using namespace std;
-int n, x;
 int a[101], dp[1000006];
 const int Mod = 1e9 + 7;
 signed main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0), cout.tie(0);
+    int n, x;
     cin >> n >> x;
 
     for (int i = 0; i < n; i++) {
