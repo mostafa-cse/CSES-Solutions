@@ -19,17 +19,7 @@ This repository is aimed at:
 
 ## 📂 Folder Structure
 
-Solutions are grouped by topic and named by problem title or ID.
-## 📁 Folder Structure
-
-Each folder contains the solutions to CSES problems grouped by topic:
-
-## 📂 CSES Problem Set – Folder Structure
-
-## 📂 CSES Problem Set – Folder Structure
-
-## 📂 CSES Problem Set – Folder Structure
-
+Solutions are grouped by topic and named by problem title or ID. Each folder contains the solutions to CSES problems grouped by topic:
 - [1. Introductory Problems](./1.%20Introductory%20Problems)  
 - [2. Sorting and Searching](./2.%20Sorting%20and%20Searching)  
 - [3. Dynamic Programming](./3.%20Dynamic%20Programming)  
