@@ -24,9 +24,11 @@ Solutions are grouped by topic and named by problem title or ID.
 
 Each folder contains the solutions to CSES problems grouped by topic:
 
-- [Introductory_Problems](./1_Introductory_Problems)
-- [Sorting_and_Searching](./2_Sorting_and_Searching)
-- [Dynamic_Programming](./3_Dynamic_Programming)
+## 📂 CSES Problem Set – Folder Structure
+
+- 1. [1. Introductory Problems](./1.%20Introductory%20Problems)  
+- 2. [2. Sorting and Searching](./2.%20Sorting%20and%20Searching)  
+- 3. [3. Dynamic Programming](./3.%20Dynamic%20Programming)
 - [Graph_Algorithms](./Graph_Algorithms)
 - [Tree_Algorithms](./Tree_Algorithms)
 - [Range_Queries](./Range_Queries)
