@@ -20,48 +20,28 @@ This repository is aimed at:
 ## 📂 Folder Structure
 
 Solutions are grouped by topic and named by problem title or ID.
-```cpp
-cses-workbook-solutions/
-│
-├── Introductory_Problems/
-│
-├── Sorting_and_Searching/
-│
-├── Dynamic_Programming/
-│
-├── Graph_Algorithms/
-│
-├── Tree_Algorithms/
-│
-├── Range_Queries/
-│
-├── Mathematics/
-│
-├── String_Algorithms/
-│
-├── Geometry/
-│
-├── Advanced_Techniques/
-│
-├── Sliding_Window_Problems/
-│
-├── Interactive_Problems/
-│
-├── Bitwise_Operations/
-│
-├── Construction_Problems/
-│
-├── Advanced_Graph_Problems/
-│
-├── Counting_Problems/
-│
-├── Additional_Problems_I/
-│
-├── Additional_Problems_II/
-│
-├── LICENSE
-└── README.md
-```
+## 📁 Folder Structure
+
+Each folder contains the solutions to CSES problems grouped by topic:
+
+- [Introductory_Problems](./Introductory_Problems)
+- [Sorting_and_Searching](./Sorting_and_Searching)
+- [Dynamic_Programming](./Dynamic_Programming)
+- [Graph_Algorithms](./Graph_Algorithms)
+- [Tree_Algorithms](./Tree_Algorithms)
+- [Range_Queries](./Range_Queries)
+- [Mathematics](./Mathematics)
+- [String_Algorithms](./String_Algorithms)
+- [Geometry](./Geometry)
+- [Advanced_Techniques](./Advanced_Techniques)
+- [Sliding_Window_Problems](./Sliding_Window_Problems)
+- [Interactive_Problems](./Interactive_Problems)
+- [Bitwise_Operations](./Bitwise_Operations)
+- [Construction_Problems](./Construction_Problems)
+- [Advanced_Graph_Problems](./Advanced_Graph_Problems)
+- [Counting_Problems](./Counting_Problems)
+- [Additional_Problems_I](./Additional_Problems_I)
+- [Additional_Problems_II](./Additional_Problems_II)
 
 ---
 
