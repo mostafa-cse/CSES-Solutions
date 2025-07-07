@@ -120,7 +120,6 @@ This repository is licensed under the [MIT License](LICENSE), so feel free to us
 - Workbook format inspired by **Isun57**, **ilovesabnaj**, and the broader CP community
 
 ---
----
 
 <div align="center">
 
