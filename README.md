@@ -120,9 +120,14 @@ This repository is licensed under the [MIT License](LICENSE), so feel free to us
 - Workbook format inspired by **Isun57**, **ilovesabnaj**, and the broader CP community
 
 ---
-<div style = "align : center">
-  Happy Coding! 💻✨  
-  _“Practice is the best teacher.”_
+---
+
+<div align="center">
+
+Happy Coding! 💻✨  
+<em>“Practice is the best teacher.”</em>
+
 </div>
+
 
 
