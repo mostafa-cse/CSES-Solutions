@@ -28,8 +28,8 @@ pair<int, int> solve(int mask) {
 }
 
 signed main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0), cout.tie(0);
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
     cin >> n >> W;
     a.resize(n);
     for (int &x : a) cin >> x;
