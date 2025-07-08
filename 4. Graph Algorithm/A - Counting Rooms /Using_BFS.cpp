@@ -18,7 +18,6 @@ signed main() {
         queue<pair<int, int>> q;
         q.push({r, c});
         vis[r][c] = true;
-
         while (!q.empty()) {
             auto [pi, pj] = q.front();
             q.pop();
