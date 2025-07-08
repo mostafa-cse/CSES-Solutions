@@ -13,7 +13,6 @@ signed main() {
             cin >> g[i][j];
         }
     }
-
     vector<vector<bool>> vis(n, vector<bool>(m, false));
     function<void(int, int)> bfs = [&](int r, int c) -> void {
         queue<pair<int, int>> q;
