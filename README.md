@@ -24,7 +24,7 @@ Solutions are grouped by topic and named by problem title or ID. Each folder con
 - [1. Introductory Problems](./1.%20Introductory%20Problems)  
 - [2. Sorting and Searching](./2.%20Sorting%20and%20Searching)  
 - [3. Dynamic Programming](./3.%20Dynamic%20Programming)  
-- [4. Graph Algorithms](./4.%20Graph%20Algorithms)  
+- [4. Graph Algorithms](./4.%20Graph%20Algorithm)  
 - [5. Range Queries](./5.%20Range%20Queries)  
 - [6. Tree Algorithms](./6.%20Tree%20Algorithms)  
 - [7. Mathematics](./7.%20Mathematics)  
