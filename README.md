@@ -1,7 +1,7 @@
 <div align="center">
   <h1>  📘 CSES Problem Set Solutions </h1>
 </div>
-Welcome to the **CSES Problem Set Workbook Solutions Repository**!  
+Welcome to the CSES Problem Set Workbook Solutions Repository!  
 This repository contains structured, categorized, and well-documented solutions for problems from the [CSES Problem Set](https://cses.fi/problemset/), with a focus on the extended **Workbook** version curated by the community (e.g., Isun57, ilovesabnaj, etc.).
 
 ---
