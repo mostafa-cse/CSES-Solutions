@@ -1,10 +1,6 @@
-#include <iostream>
-#include <vector>
-#include <set>
-#include <algorithm>
+#include <bits/stdc++.h>
 using namespace std;
-
-using ll = long long;
+#define int long long
 
 // Kosaraju's algorithm for SCCs
 void dfs1(int u, const vector<vector<int>> &rev_adj, vector<bool> &visited, vector<int> &order)
@@ -29,12 +25,12 @@ void dfs2(int u, const vector<vector<int>> &adj, vector<int> &scc_id, int id, ve
     }
 }
 
-int main()
+int32_t main()
 {
     int n, m;
     cin >> n >> m;
 
-    vector<ll> coins(n);
+    vector<int> coins(n);
     for (int i = 0; i < n; ++i)
         cin >> coins[i];
 
@@ -73,7 +69,7 @@ int main()
     }
 
     // Build condensed graph (DAG of SCCs)
-    vector<ll> scc_coins(scc_count, 0);
+    vector<int> scc_coins(scc_count, 0);
     vector<set<int>> dag(scc_count);
     for (int i = 0; i < scc_count; ++i)
     {
@@ -89,8 +85,8 @@ int main()
     }
 
     // DP on DAG to find max coins
-    vector<ll> dp(scc_count, 0);
-    ll ans = 0;
+    vector<int> dp(scc_count, 0);
+    int ans = 0;
     for (int i = scc_count - 1; i >= 0; --i)
     {
         dp[i] = scc_coins[i];

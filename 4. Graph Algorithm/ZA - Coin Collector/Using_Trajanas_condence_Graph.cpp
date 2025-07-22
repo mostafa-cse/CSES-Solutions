@@ -1,15 +1,12 @@
-#include <iostream>
-#include <vector>
-#include <stack>
-#include <algorithm>
+#include <bits/stdc++.h>
 using namespace std;
 
-typedef long long ll;
+#define int long long
 
 // Graph and SCC variables
 vector<vector<int>> adj, condensed_adj;
 vector<int> coins, scc_id;
-vector<ll> scc_coins, dp;
+vector<int> scc_coins, dp;
 vector<bool> visited, on_stack;
 stack<int> st;
 vector<int> low, disc;
@@ -32,7 +29,7 @@ void tarjan(int u) {
     }
 
     if (low[u] == disc[u]) {
-        ll total = 0;
+        int total = 0;
         int node;
         do {
             node = st.top(); st.pop();
@@ -46,9 +43,9 @@ void tarjan(int u) {
 }
 
 // DP on condensed graph
-ll dfs(int u) {
+int dfs(int u) {
     if (dp[u] != -1) return dp[u];
-    ll best = 0;
+    int best = 0;
     for (int v : condensed_adj[u]) {
         best = max(best, dfs(v));
     }
@@ -57,7 +54,7 @@ ll dfs(int u) {
 
 int main() {
     ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+    cin.tie(0);
 
     int n, m;
     cin >> n >> m;
@@ -100,7 +97,7 @@ int main() {
 
     // DP to find max coins
     dp.assign(scc_count, -1);
-    ll ans = 0;
+    int ans = 0;
     for (int i = 0; i < scc_count; ++i) {
         ans = max(ans, dfs(i));
     }
