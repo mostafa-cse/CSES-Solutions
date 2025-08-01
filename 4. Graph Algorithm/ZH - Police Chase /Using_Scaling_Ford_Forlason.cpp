@@ -1,11 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define int long long
-#ifndef ONLINE_JUDGE
-#define dout(...) cerr << "Line:" << __LINE__ << " [" << #__VA_ARGS__ << "] = ["; _print(__VA_ARGS__)
-#else
-#define dout(...)
-#endif
+
 bool dfs(int u, int dest, vector<vector<int>> &adj, vector<int> &path, int threshhold, vector<int> &vis, int n) {
     vis[u] = 1;
     if (u == dest) {
@@ -79,7 +75,7 @@ int32_t main() {
     vector<int> left;
     vector<int> visited(n + 1, 0);
     dfs2(1, adj, left, visited, n);
-    dout(visited);
+
     unordered_set<int> st;
     
     for (auto &i : left) {
