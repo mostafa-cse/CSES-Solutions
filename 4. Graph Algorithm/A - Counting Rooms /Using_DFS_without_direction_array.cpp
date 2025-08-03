@@ -25,10 +25,11 @@ signed main() {
         dfs(r - 1, c);
         dfs(r, c - 1);
     };
+
     int ans = 0;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
-            if (vis[i][j] == 0 and g[i][j] == '.') {
+            if (vis[i][j] == 0 and g[i][j] == '.') { // Count Component at each time call 
                 ans++;
                 dfs(i, j);
             }

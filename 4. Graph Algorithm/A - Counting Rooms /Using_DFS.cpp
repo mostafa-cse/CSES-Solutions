@@ -29,7 +29,7 @@ signed main() {
     int ans = 0;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
-            if (vis[i][j] == 0 and g[i][j] == '.') {
+            if (vis[i][j] == 0 and g[i][j] == '.') { // Same as before just change of using 4-direction
                 ans++;
                 dfs(i, j);
             }
