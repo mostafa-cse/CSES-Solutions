@@ -26,11 +26,10 @@ int main() {
     vector<vector<pair<int, int>>> parent(n, vector<pair<int, int>>(m, {-1, -1}));
     vector<pair<int, int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     string dir_chars = "UDLR";
-    
     queue<pair<int, int>> q;
+
     q.push({start_x, start_y});
     visited[start_x][start_y] = true;
-    
     bool found = false;
     while (!q.empty() && !found) {
         auto [x, y] = q.front();

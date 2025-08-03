@@ -23,7 +23,7 @@ signed main() {
         int dis, x, y;
         string dir;
     };
-
+    
     queue<Node> pq;
     vector<vector<int>> vis(n, vector<int>(m, 1e10));
     pq.push({0, x_i, y_i, ""});
