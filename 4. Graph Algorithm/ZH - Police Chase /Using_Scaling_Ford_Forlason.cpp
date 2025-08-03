@@ -72,6 +72,8 @@ int32_t main() {
         }
     }
     cout << ans << "\n";
+
+    // Minimum Vertex Cover	When you need the minimum cut/vertex cover edges
     vector<int> left;
     vector<int> visited(n + 1, 0);
     dfs2(1, adj, left, visited, n);
