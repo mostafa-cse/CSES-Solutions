@@ -13,8 +13,7 @@ struct segment_tree{
     }
     void push(int node, int start, int end) {
         if (lazy[node] != 0) {
-            sgt[node] += (end - start + 1) * lazy[node]; // Sum
-            // sgt[node] += lazy[node];                     // max-min
+            sgt[node] += (end - start + 1) * lazy[node];
             if (start != end) {
                 lazy[node * 2]     += lazy[node];
                 lazy[node * 2 + 1] += lazy[node];
@@ -24,8 +23,6 @@ struct segment_tree{
     }
     int combine(int left, int right) {
         return left + right;
-        // return min(left ,right);
-        // return max(left, right);
     }
     void build(int node, int start, int end){
         if (start == end) {
@@ -56,7 +53,7 @@ struct segment_tree{
     int query(int node, int start, int end, int ql, int qr) {
         push(node, start, end);
         if (start > qr or end < ql) {
-            return 0; // Edit here
+            return 0;
         }
         if (start >= ql and end <= qr) {
             return sgt[node];
