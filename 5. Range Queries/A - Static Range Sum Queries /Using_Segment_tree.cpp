@@ -25,7 +25,7 @@ struct SegmentTree {
     }
     int query(int node, int l, int r, int ql, int qr) {
         if (l > qr or r < ql) {
-            return 0; // Edit here
+            return 0; 
         }
         if (l >= ql and r <= qr) {
             return sgt[node];

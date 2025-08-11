@@ -34,7 +34,6 @@ signed main() {
     while (q--) {
         int l, r;
         cin >> l >> r;
-
         cout << query(r) - query(l - 1) << endl;
     }
     return 0;
