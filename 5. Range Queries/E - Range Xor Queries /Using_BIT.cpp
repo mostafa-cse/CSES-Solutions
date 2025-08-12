@@ -5,7 +5,7 @@ const int N = 5e5 + 123;
 int a[N], bit[4 * N];
 void update(int i, int val, int n) {
     while (i <= n) {
-        bit[i] ^= val; /*store according to condition*/
+        bit[i] ^= val; 
         i += (i & (-i));
     }
 }
