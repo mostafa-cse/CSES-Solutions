@@ -5,7 +5,6 @@ using namespace __gnu_pbds;
 #define int long long
 using namespace std;
 typedef tree<int, null_type, less_equal<int>, rb_tree_tag, tree_order_statistics_node_update> oset;
-
 int32_t main() {
     int n, k;
     cin >> n >> k;

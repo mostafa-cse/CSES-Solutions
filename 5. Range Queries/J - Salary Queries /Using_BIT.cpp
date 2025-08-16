@@ -4,89 +4,70 @@ using namespace std;
  
 struct BIT {
     vector<int> bit;
- 
     BIT () { bit.resize((int) 6e5); }
- 
     int get(int i) {
         int sum = 0;
-        for ( ; i >= 0; i = (i & (i + 1)) - 1)
+        for (; i >= 0; i = (i & (i + 1)) - 1) {
             sum += bit[i];
+        }
         return sum;
     }
- 
     void update(int i, int delta) {
-        for ( ; i < bit.size(); i |= (i + 1))
+        for (; i < bit.size(); i |= (i + 1)) {
             bit[i] += delta;
-    }
- 
-    int get (int l, int r) { return get(r) - get(l - 1); }
-};
- 
-BIT ft;
-int n, q;
-vector<int> arr;
-vector<pair<int, int>> comp;
-int cast(int x) {
-    auto lb = lower_bound(all(comp), pair<int, int> (x, 0));
-    return (*lb).second;
-}
- 
-struct Query {
-    char t;
-    int a, b;
- 
-    void execute () {
-        if (t == '!') {
-            ft.update(cast(arr[a]), -1);
-            arr[a] = b;
-            ft.update(cast(arr[a]), 1);    
-            return;
         }
- 
-        cout << ft.get(cast(a), cast(b)) << '\n';
+    }
+    int get(int l, int r) { 
+        return get(r) - get(l - 1); 
     }
 };
-vector<Query> qr;
+
 int main () {
+    int n, q;
     cin >> n >> q;
-    arr.resize(n);
- 
+
+    vector<int> ar(n), comp;
     for (int i = 0; i < n; i++) {
-        cin >> arr[i];
-        comp.push_back({arr[i], 0});
+        cin >> ar[i];
+        comp.push_back(ar[i]);
     }
- 
-    char t;
-    int a, b;
+
+    struct Query {
+        char t;
+        int a, b;
+    };
+    vector<Query> qr(q);
+
     for (int i = 0; i < q; i++) {
-        cin >> t >> a >> b;
-        if (t == '!') {
-            a--;
-            comp.push_back({b, 0});
+        cin >> qr[i].t >> qr[i].a >> qr[i].b;
+        if (qr[i].t == '!') {
+            qr[i].a--;
+            comp.push_back(qr[i].b);
+        } else {
+            comp.push_back(qr[i].a);
+            comp.push_back(qr[i].b);
         }
-        else {
-            comp.push_back({a, 0});
-            comp.push_back({b, 0});
-        }
- 
-        qr.push_back({t, a, b});
     }
     sort(all(comp));
- 
-    int cnt = 0;
-    for (int i = 0; i < comp.size(); i++) {
-        if (i && comp[i - 1].first != comp[i].first)
-            cnt++;
-        
-        comp[i].second = cnt;
-    }
- 
-    for (int i : arr) {
+    comp.resize(unique(comp.begin(), comp.end()) - comp.begin());
+
+    function<int(int)> cast = [&](int x) -> int {
+        return lower_bound(all(comp), x) - comp.begin();
+    };
+
+    BIT ft;
+    for (int i : ar) {
         ft.update(cast(i), 1);
     }
  
-    for (Query& it : qr) {
-        it.execute();
+    for (auto &[t, a, b] : qr) {
+        if (t == '!') {
+            ft.update(cast(ar[a]), -1);
+            ar[a] = b;
+            ft.update(cast(ar[a]), 1);    
+        } else {
+            cout << ft.get(cast(a), cast(b)) << '\n';
+        }
     }
     return 0;
 }
