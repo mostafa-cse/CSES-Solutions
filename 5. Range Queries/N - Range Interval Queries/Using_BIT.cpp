@@ -1,129 +1,61 @@
 #include <bits/stdc++.h>
+#define int long long
 using namespace std;
-
-const int N = 203000;
-const int B = 450;
-
-int a[N];
-int cnt[N];
-int pos[N];
-
-template <typename T>
-inline T read() {
-    T f = 1;
-    T x = 0;
-    int ch = getchar();
-    while (ch != EOF && !isdigit(ch)) {
-        if (ch == '-') f = -1;
-        ch = getchar();
-    }
-    while (ch != EOF && isdigit(ch)) {
-        x = (x << 3) + (x << 1) + (ch ^ 48);
-        ch = getchar();
-    }
-    return x * f;
-}
-
-inline void solve() {
-    int n = read<int>();
-    int q = read<int>();
-
-    vector<int> lsh;
-    lsh.reserve(n);
-    for (int i = 1; i <= n; ++i) {
-        a[i] = read<int>();
-        lsh.push_back(a[i]);
-    }
-
-    sort(lsh.begin(), lsh.end());
-    lsh.erase(unique(lsh.begin(), lsh.end()), lsh.end());
-    int M = (int)lsh.size();
-
-    for (int i = 1; i <= n; ++i) {
-        a[i] = int(lower_bound(lsh.begin(), lsh.end(), a[i]) - lsh.begin()) + 1;
-    }
-
-    int blk_cnt = (M + B - 1) / B;
-    if (blk_cnt == 0) blk_cnt = 1;
-
-    vector<int> L(blk_cnt + 2), R(blk_cnt + 2), sum(blk_cnt + 2, 0);
-    for (int i = 1; i <= blk_cnt; ++i) {
-        L[i] = (i - 1) * B + 1;
-        R[i] = min(i * B, M);
-        for (int j = L[i]; j <= R[i]; ++j) pos[j] = i;
-    }
-
-    struct Query { int l, r, x, y, idx; };
-    vector<Query> qu(q);
-    for (int i = 0; i < q; ++i) {
-        int l = read<int>();
-        int r = read<int>();
-        int x = read<int>();
-        int y = read<int>();
-
-        int dx = int(lower_bound(lsh.begin(), lsh.end(), x) - lsh.begin()) + 1;
-        int dy = int(upper_bound(lsh.begin(), lsh.end(), y) - lsh.begin());
-        dx = max(dx, 1);
-        dy = min(dy, M);
-
-        qu[i] = {l, r, dx, dy, i};
-    }
-
-    sort(qu.begin(), qu.end(), [&](const Query &A, const Query &Bq) {
-        int ablock = A.l / B;
-        int bblock = Bq.l / B;
-        if (ablock == bblock) {
-            if (ablock % 2 == 0) return A.r < Bq.r;
-            else return A.r > Bq.r;
-        }
-        return A.l < Bq.l;
-    });
-
-    auto add = [&](int idx) {
-        int val = a[idx];
-        ++cnt[val];
-        ++sum[pos[val]];
-    };
-
-    auto del = [&](int idx) {
-        int val = a[idx];
-        --cnt[val];
-        --sum[pos[val]];
-    };
-
-    auto findans = [&](int lval, int rval) -> int {
-        if (lval > rval) return 0;
-        int ans = 0;
-        int p = pos[lval];
-        int qpos = pos[rval];
-        if (p == qpos) {
-            for (int i = lval; i <= rval; ++i) ans += cnt[i];
-            return ans;
-        }
-        for (int b = p + 1; b <= qpos - 1; ++b) ans += sum[b];
-        for (int i = lval; i <= R[p]; ++i) ans += cnt[i];
-        for (int i = L[qpos]; i <= rval; ++i) ans += cnt[i];
-        return ans;
-    };
-
-    vector<int> res(q);
-    int cl = 1, cr = 0;
-
-    for (auto &Q : qu) {
-        int Lq = Q.l, Rq = Q.r;
-        while (cl > Lq) add(--cl);
-        while (cr < Rq) add(++cr);
-        while (cl < Lq) del(cl++);
-        while (cr > Rq) del(cr--);
-        res[Q.idx] = findans(Q.x, Q.y);
-    }
-
-    for (int i = 0; i < q; ++i) {
-        cout << res[i] << '\n';
+const int N = 5e5 + 123;
+int bit[4 * N], n;
+void update(int i, int val) {
+    while (i <= n) {
+        bit[i] += val;
+        i += (i & (-i));
     }
 }
+int query(int idx) {
+    int ans = 0;
+    while (idx > 0) {
+        ans += bit[idx];
+        idx -= (idx & (-idx));
+    }
+    return ans;
+}
+signed main() {
+    int q;
+    cin >> n >> q;
 
-int main() {
-    solve();
+    vector<pair<int, int>> a(n + 1);
+    for (int i = 1; i <= n; i++) {
+        int x;
+        cin >> x;
+        a[i] = {x, i};
+    }
+    sort(a.begin() + 1, a.end());
+    struct Query {
+        int val, l, r, qt, idx;
+        const bool operator<(const Query &other) const {
+            return val < other.val;
+        }
+    };
+    vector<Query> qry;
+    for (int i = 0; i < q; i++) {
+        int l, r, a, b;
+        cin >> l >> r >> a >> b;
+        qry.push_back({b, l, r, +1, i});
+        qry.push_back({a - 1, l, r, -1, i});
+    }
+    sort(qry.begin(), qry.end());
+
+    int i = 1;
+    vector<int> ans(q, 0);
+    for (auto [val, l, r, qt, idx] : qry) {
+        while (i <= n and a[i].first <= val) {
+            update(a[i].second, 1);
+            i++;
+        }
+        ans[idx] += qt * (query(r) - query(l - 1));
+    }
+
+    for (int i : ans) {
+        cout << i << "\n";
+    }
+    cout << endl;
     return 0;
 }

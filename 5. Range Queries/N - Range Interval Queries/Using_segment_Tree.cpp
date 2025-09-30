@@ -1,85 +1,75 @@
 #include <bits/stdc++.h>
-#include <ext/pb_ds/tree_policy.hpp>
-#include <ext/pb_ds/assoc_container.hpp>
-using namespace __gnu_pbds;
-#define int long long
 using namespace std;
-typedef tree<int, null_type, less_equal<int>, rb_tree_tag, tree_order_statistics_node_update> PBDS;
-#ifndef ONLINE_JUDGE
-#define dout(...) cerr << "Line:" << __LINE__ << " [" << #__VA_ARGS__ << "] = ["; _print(__VA_ARGS__)
-#else
-#define dout(...)
-#endif
-struct Node {
-    PBDS val;
-    Node() {}
-    Node operator+(const Node &o) {
-        Node ans;
-        ans.val = val;
-        for (auto el : o.val) {
-            ans.val.insert(el);
+const int N = 1 << 18;
+int tree[2 * N];
+void set_val(int pos) {
+    pos += N;
+    tree[pos] = 1;
+
+    for (pos /= 2; pos >= 1; pos /= 2) {
+        tree[pos] = tree[2 * pos] + tree[2 * pos + 1];
+    }
+}
+
+int get_sum(int a, int b) {
+    a += N;
+    b += N;
+
+    int sum = 0;
+    while (a <= b) {
+        if (a % 2 == 1) {
+            sum += tree[a++];
         }
-        return ans;
-    }
-};
-struct SegmentTree {
-    vector<Node> sgt;
-    vector<int> a;
-    int n;
-    SegmentTree(int N) {
-        this->n = N;
-        a.assign(N + 1, 0);
-        sgt.resize(4 * n);
-    }
-    Node combine(Node a, Node b) {
-        return a + b; 
-    }
-    void build (int node, int l, int r) {
-        if (l == r) {
-            sgt[node].val.insert(a[l]);
-            return;
+        if (b % 2 == 0) {
+            sum += tree[b--];
         }
-        int mid = l + (r - l) / 2;
-        build(node * 2, l, mid);
-        build(node * 2 + 1, mid + 1, r);
-        sgt[node] = combine(sgt[2 * node], sgt[2 * node + 1]);
+        a /= 2;
+        b /= 2;
     }
-    int query(int node, int l, int r, int ql, int qr, int a, int b) {
-        if (l > qr or r < ql) {
-            return 0;
-        }
-        if (l >= ql and r <= qr) {
-            // dout(l, r, a, b);
-            // dout(sgt[node].val);
-            int posr = sgt[node].val.order_of_key(b + 1);
-            int posl = sgt[node].val.order_of_key(a);
-            // dout(a, posl);
-            // dout(b, posr);
-            return posr - posl;
-        }
-        int mid = l + (r - l) / 2;
-        int left = query(node * 2, l, mid, ql, qr, a, b);
-        int right = query(node * 2 + 1, mid + 1, r, ql, qr, a, b);
-        return (left + right);
-    }
-    void build() { build(1, 1, n); }
-    int query(int l, int r, int a, int b) { return query(1, 1, n, l, r, a, b); }
-};
-signed main() {
+    return sum;
+}
+
+int main() {
     int n, q;
     cin >> n >> q;
 
-    SegmentTree a(n);
+    vector<vector<int>> events;
+
     for (int i = 1; i <= n; i++) {
-        cin >> a.a[i];
+        int x;
+        cin >> x;
+        events.push_back({x, 2, i});
     }
 
-    a.build();
-    while(q--) {
-        int l, r, la, rb;
-        cin >> l >> r >> la >> rb;
+    for (int i = 1; i <= q; i++) {
+        int a, b, c, d;
+        cin >> a >> b >> c >> d;
+        events.push_back({c, 1, a, b, i});
+        events.push_back({d, 3, a, b, i});
+    }
 
-        cout << a.query(l, r, la, rb) << endl;
+    sort(events.begin(), events.end());
+
+    vector<int> result(q + 1);
+
+    for (auto event : events) {
+        if (event[1] == 1) {
+            int sum = get_sum(event[2], event[3]);
+            result[event[4]] -= sum;
+        }
+
+        if (event[1] == 2) {
+            set_val(event[2]);
+        }
+
+        if (event[1] == 3) {
+            int sum = get_sum(event[2], event[3]);
+            result[event[4]] += sum;
+        }
+    }
+
+    for (int i = 1; i <= q; i++) {
+        cout << result[i] << "\n";
     }
     return 0;
 }
