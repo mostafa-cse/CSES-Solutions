@@ -1,227 +1,112 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define int long long
-
-// Matrix for affine transformations: f(x) = ax + b
-// [a b] * [x] = [ax + b]
-// [0 1]   [1]   [  1   ]
-struct Matrix {
-    int a[2][2];
-
-    Matrix() {
-        a[0][0] = 1; a[0][1] = 0;
-        a[1][0] = 0; a[1][1] = 1;
-    }
-
-    Matrix(int a00, int a01, int a10, int a11) {
-        a[0][0] = a00; a[0][1] = a01;
-        a[1][0] = a10; a[1][1] = a11;
-    }
-
-    Matrix operator*(const Matrix& other) const {
-        Matrix result;
-        result.a[0][0] = a[0][0] * other.a[0][0] + a[0][1] * other.a[1][0];
-        result.a[0][1] = a[0][0] * other.a[0][1] + a[0][1] * other.a[1][1];
-        result.a[1][0] = a[1][0] * other.a[0][0] + a[1][1] * other.a[1][0];
-        result.a[1][1] = a[1][0] * other.a[0][1] + a[1][1] * other.a[1][1];
-        return result;
-    }
-
-    // Apply transformation: f(x) = a[0][0] * x + a[0][1]
-    int apply(int x) const {
-        return a[0][0] * x + a[0][1];
-    }
-
-    bool isIdentity() const {
-        return a[0][0] == 1 && a[0][1] == 0 && a[1][0] == 0 && a[1][1] == 1;
-    }
-};
-
-// Identity transformation: f(x) = x
-Matrix identity() {
-    return Matrix(1, 0, 0, 1);
+#ifndef ONLINE_JUDGE
+#define dout(...) cerr << "Line:" << __LINE__ << " [" << #__VA_ARGS__ << "] = ["; _print(__VA_ARGS__)
+#else
+#define dout(...)
+#endif
+const int N = 2e5 + 5;
+vector<int> pre;
+int getSum(int l, int r) {
+    if (l > r) return 0;
+    return pre[r] - (l == 0 ? 0 : pre[l - 1]);
 }
 
-// Add operation: f(x) = x + val
-Matrix addOp(int val) {
-    return Matrix(1, val, 0, 1);
-}
-
-// Set operation: f(x) = val
-Matrix setOp(int val) {
-    return Matrix(0, val, 0, 1);
-}
-
-struct Node {
-    int sum;
-    Matrix lazy;
-    bool hasLazy;
-    int len;
-
-    Node() : sum(0), lazy(identity()), hasLazy(false), len(0) {}
-};
-
-class MatrixSegTree {
+class SegmentTree {
 private:
     int n;
-    vector<Node> tree;
+    const pair<int, int> zero = {0, -1};
+    vector<int> &nums;
+    vector<int> &right;
+    vector<pair<int, int>> node;
 
-    void push(int node, int start, int end) {
-        if (!tree[node].hasLazy || tree[node].lazy.isIdentity()) return;
-
-        // Apply transformation to sum
-        if (tree[node].lazy.a[0][0] == 0) {
-            // Set operation: all elements become the same value
-            tree[node].sum = tree[node].lazy.a[0][1] * (end - start + 1);
-        } else {
-            // Add operation: f(x) = x + val, so sum becomes sum + val * length
-            tree[node].sum += tree[node].lazy.a[0][1] * (end - start + 1);
-        }
-
-        // Push to children
-        if (start != end) {
-            // Compose transformations: new_lazy = old_lazy ∘ current_lazy
-            tree[2*node].lazy = tree[node].lazy * tree[2*node].lazy;
-            tree[2*node+1].lazy = tree[node].lazy * tree[2*node+1].lazy;
-            tree[2*node].hasLazy = tree[2*node+1].hasLazy = true;
-        }
-
-        tree[node].lazy = identity();
-        tree[node].hasLazy = false;
+    pair<int, int> merge(pair<int, int> a, pair<int, int> b) {
+        if (a == zero || b == zero) return (a != zero ? a : b);
+        // Fix logic: pick index with larger nums value
+        int cost = a.first + b.first;
+        int big = (nums[a.second] > nums[b.second] ? a.second : b.second);
+        return {cost, big};
     }
 
-    void build(int node, int start, int end, vector<int>& arr) {
-        tree[node].len = end - start + 1;
-        if (start == end) {
-            tree[node].sum = arr[start];
-        } else {
-            int mid = (start + end) / 2;
-            build(2*node, start, mid, arr);
-            build(2*node+1, mid+1, end, arr);
-            tree[node].sum = tree[2*node].sum + tree[2*node+1].sum;
-        }
+    pair<int, int> query(int l, int r, int L, int R, int head) {
+        if (l > R || L > r) return zero;
+        if (L <= l && r <= R) return node[head];
+
+        int mid = (l + r) >> 1;
+        pair<int, int> lhs = query(l, mid, L, R, head * 2 + 1);
+        pair<int, int> rhs = query(mid + 1, r, L, R, head * 2 + 2);
+        return merge(lhs, rhs);
     }
 
-    void updateRange(int node, int start, int end, int l, int r, Matrix op) {
-        if (start > r || end < l) return;
+    void build(int l, int r, int head) {
+        if (l == r) {
 
-        if (start >= l && end <= r) {
-            tree[node].lazy = op * tree[node].lazy;
-            tree[node].hasLazy = true;
-            push(node, start, end);
+            int id = right[l] - 1; //back to previous
+            int len = id - l; // length of subarray that can convert a[i] to a[l]
+
+            int preCost = query(l + 1, id).first;
+            node[head] = {nums[l] * len - getSum(l + 1, id) - preCost, l};
             return;
         }
-
-        push(node, start, end);
-        int mid = (start + end) / 2;
-        updateRange(2*node, start, mid, l, r, op);
-        updateRange(2*node+1, mid+1, end, l, r, op);
-
-        push(2*node, start, mid);
-        push(2*node+1, mid+1, end);
-        tree[node].sum = tree[2*node].sum + tree[2*node+1].sum;
-    }
-
-    int queryRange(int node, int start, int end, int l, int r) {
-        if (start > r || end < l) return 0;
-
-        push(node, start, end);
-        if (start >= l && end <= r) {
-            return tree[node].sum;
-        }
-
-        int mid = (start + end) / 2;
-        return queryRange(2*node, start, mid, l, r) +
-               queryRange(2*node+1, mid+1, end, l, r);
+        int mid = (l + r) >> 1;
+        build(mid + 1, r, head * 2 + 2);
+        build(l, mid, head * 2 + 1);
+        node[head] = merge(node[head * 2 + 1], node[head * 2 + 2]);
     }
 
 public:
-    MatrixSegTree(vector<int>& arr) {
-        n = arr.size() - 1;
-        tree.resize(4 * n + 1);
-        build(1, 1, n, arr);
+    SegmentTree(vector<int> &_nums, vector<int> &_right) : nums(_nums), right(_right) {
+        n = (int)nums.size() - 1;
+        int m = 1; while (m < 2 * n) m <<= 1;
+        node.assign(m, zero);
+        build(0, n - 1, 0);
     }
 
-    void rangeAdd(int l, int r, int val) {
-        updateRange(1, 1, n, l, r, addOp(val));
-    }
-
-    void rangeSet(int l, int r, int val) {
-        updateRange(1, 1, n, l, r, setOp(val));
-    }
-
-    int rangeSum(int l, int r) {
-        return queryRange(1, 1, n, l, r);
+    pair<int, int> query(int l, int r) {
+        if (l > r) return zero;
+        return query(0, n - 1, l, r, 0);
     }
 };
 
-signed main() {
-    ios_base::sync_with_stdio(false);
+int32_t main() {
+    ios::sync_with_stdio(false);
     cin.tie(nullptr);
-
     int n, q;
     cin >> n >> q;
+    vector<int> nums(n + 1);
+    nums[n] = (int)2e9 + 10;
+    for (int i = 0; i < n; i++) cin >> nums[i];
 
-    vector<int> a(n + 1);
-    for (int i = 1; i <= n; i++) {
-        cin >> a[i];
+    pre = nums;
+    for (int i = 1; i < n; i++) pre[i] += pre[i - 1];
+
+    vector<int> right(n, -1);
+    vector<int> stk; stk.push_back(n);
+    for (int i = n - 1; i >= 0; i--) {
+        while (nums[stk.back()] <= nums[i]) stk.pop_back();
+        right[i] = stk.back();
+        stk.push_back(i);
     }
 
-    MatrixSegTree seg(a);
+    SegmentTree seg(nums, right);
 
-    while (q--) {
-        int type;
-        cin >> type;
+    for (int _ = 0; _ < q; _++) {
+        int l, r;
+        cin >> l >> r;
+        l--, r--;
 
-        if (type == 1) { // range add
-            int l, r, x;
-            cin >> l >> r >> x;
-            seg.rangeAdd(l, r, x);
-        } else if (type == 2) { // range set
-            int l, r, x;
-            cin >> l >> r >> x;
-            seg.rangeSet(l, r, x);
-        } else { // range sum query
-            int l, r;
-            cin >> l >> r;
-            cout << seg.rangeSum(l, r) << "\n";
-        }
+        int mid = seg.query(l, r).second;
+        // big value idx mid between [l, r]
+
+        int ans = 0;
+        if (mid > l) ans = max(0ll, seg.query(l, mid - 1).first);
+
+        int bigVal = nums[mid];
+
+        ans += (r - mid + 1) * bigVal - getSum(mid, r);
+
+        cout << ans << '\n';
     }
-
     return 0;
 }
-
-/*
-MATRIX EXPONENTIATION TECHNIQUE EXPLANATION:
-
-1. AFFINE TRANSFORMATIONS:
-   - Every operation can be represented as f(x) = ax + b
-   - Add operation: f(x) = 1·x + val  (matrix: [1 val; 0 1])
-   - Set operation: f(x) = 0·x + val  (matrix: [0 val; 0 1])
-
-2. COMPOSITION OF OPERATIONS:
-   - Matrix multiplication represents function composition
-   - If we have f₁(x) = a₁x + b₁ and f₂(x) = a₂x + b₂
-   - Then f₁(f₂(x)) = a₁(a₂x + b₂) + b₁ = (a₁a₂)x + (a₁b₂ + b₁)
-   - Matrix: [a₁ b₁] * [a₂ b₂] = [a₁a₂  a₁b₂+b₁]
-            [0  1 ]   [0  1 ]   [0     1      ]
-
-3. LAZY PROPAGATION WITH MATRICES:
-   - Each node stores a transformation matrix
-   - When updating, compose the new operation with existing lazy matrix
-   - When pushing, apply the transformation to children
-
-4. SUM CALCULATION:
-   - For add operation f(x) = x + val on range [l,r]:
-     sum becomes original_sum + val × length
-   - For set operation f(x) = val on range [l,r]:
-     sum becomes val × length
-
-5. ADVANTAGES:
-   - Unified representation of all operations
-   - Natural composition through matrix multiplication
-   - Mathematically elegant and extensible
-
-This approach uses matrix exponentiation principles (composition of linear transformations)
-to solve the range update/sum problem efficiently in O(log n) per operation.
-*/
