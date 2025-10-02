@@ -1,15 +1,4 @@
-/*
-今ここから始まる　新しい旅に
-Hello! Hello!
-I Say Hello! Hello!
-なんか反省ばっかしちゃってた　昨日の自分に
-Good Bye! Good Bye!
-One More Good Bye! Good Bye!
-走り出しちゃったこの想いに　理由なんていらないよ
-眩しい太陽を浴びて
-目的地まだ見えないけれど
-靴ひもを結んで　Walk This Way!
-*/
+
 #include <bits/stdc++.h>
 using namespace std;
 #define starburst ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);

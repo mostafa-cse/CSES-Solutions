@@ -14,11 +14,11 @@ const int M = 1e6;
 Node sgt[M];
 int ar[M];
 vector<int> point;
-struct SegmentTree {
+struct MergeSortTree {
     int n;
     vector<Node> sgt;
     vector<int> ar;
-    SegmentTree(int N) {
+    MergeSortTree(int N) {
         this->n = N;
     }
     void combine(Node &a, Node &b, Node &ans) {
@@ -79,7 +79,7 @@ signed main() {
     int n, q;
     cin >> n >> q;
 
-    SegmentTree a(n);
+    MergeSortTree a(n);
     for (int i = 1; i <= n; ++i) {
         cin >> ar[i];
     }
