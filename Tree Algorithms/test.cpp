@@ -1,54 +1,49 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
+#include <bits/stdc++.h>
+#define int long long
+using namespace std;
 
-const int N = 200001;
-int adj[N][200];  // Simple adjacency list: adj[node][i] = neighbor
-int adj_count[N]; // Number of neighbors for each node
-bool used[N];     // Track if a node is already matched
-int matching_count = 0;
-
-void dfs(int node, int parent) {
-    // Process all children first (post-order traversal)
-    for (int i = 0; i < adj_count[node]; i++) {
-        int child = adj[node][i];
-        if (child == parent) continue;
-        dfs(child, node);
-    }
-
-    // Try to match this node with its parent
-    // Only if both are not already used in some matching
-    if (parent != -1 && !used[node] && !used[parent]) {
-        used[node] = true;
-        used[parent] = true;
-        matching_count++;
-    }
-}
-
-int main(void) {
+signed main() {
     int n;
-    if (scanf("%d", &n) == EOF) return EXIT_FAILURE;
+    cin >> n;
 
-    // Initialize adjacency list
-    for (int i = 0; i <= n; i++) {
-        adj_count[i] = 0;
+    vector<vector<int>> adj(n + 1);
+    for (int i = 1; i < n; i++) {
+        int u, v;
+        cin >> u >> v;
+
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
 
-    // Read edges and build adjacency list
-    for (int i = 1; i < n; ++i) {
-        int a, b;
-        if (scanf("%d%d", &a, &b) == EOF) return EXIT_FAILURE;
+    vector<int> subTree(n + 1, 0), sum(n + 1, 0);
+    function<int(int, int)> dfs = [&](int u, int p) -> int {
+        subTree[u] = 1;
+        int subSum = 0;
+        for (int v : adj[u]) {
+            if (v != p) {
+                subSum += dfs(v, u);
+                subTree[u] += subTree[v];
+            }
+        }
+        subSum += subTree[u] - 1;
+        return subSum;
+    };
+    vector<int> ans(n + 1, 0);
+    ans[1] = dfs(1, 1);
+    function<void(int, int)> dfs2 = [&](int u, int p) -> void {
+        for (int v : adj[u]) {
+            if (v != p) {
+                // cout << ans[u] << " " << subTree[v] << " " << n << " " << u << "->" << v << endl;
+                ans[v] = ans[u] - subTree[v] + (n - subTree[v]);
+                dfs2(v, u);
+            }
+        }
+    };
+    dfs2(1, 1);
 
-        // Add edge a -> b
-        adj[a][adj_count[a]] = b;
-        adj_count[a]++;
-
-        // Add edge b -> a
-        adj[b][adj_count[b]] = a;
-        adj_count[b]++;
+    for (int i = 1; i <= n; i++) {
+        // cout << i << " : " << subTree[i] << " " << ans[i] << "\n";
+        cout << ans[i] << " ";
     }
-
-    dfs(1, 0);
-    printf("%d\n", matching_count);
-    return EXIT_SUCCESS;
+    return 0;
 }
