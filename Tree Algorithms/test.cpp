@@ -33,7 +33,7 @@ signed main() {
     function<void(int, int)> dfs2 = [&](int u, int p) -> void {
         for (int v : adj[u]) {
             if (v != p) {
-                // cout << ans[u] << " " << subTree[v] << " " << n << " " << u << "->" << v << endl;
+                // re-rooting to v
                 ans[v] = ans[u] - subTree[v] + (n - subTree[v]);
                 dfs2(v, u);
             }
@@ -42,7 +42,6 @@ signed main() {
     dfs2(1, 1);
 
     for (int i = 1; i <= n; i++) {
-        // cout << i << " : " << subTree[i] << " " << ans[i] << "\n";
         cout << ans[i] << " ";
     }
     return 0;
