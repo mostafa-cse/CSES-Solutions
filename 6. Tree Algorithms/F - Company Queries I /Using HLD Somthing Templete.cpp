@@ -66,11 +66,11 @@ signed main() {
 
         adj[p].push_back(i);
     }
-    HLD algo(adj, 1);
+    HLD a(adj, 1);
     while (q--) {
-        int a, b;
-        cin >> a >> b;
-        cout << algo.getLCA(a, b) << endl;
+        int node, k;
+        cin >> node >> k;
+        cout << a.kthPar(node, k) << endl;
     }
     return 0;
 }

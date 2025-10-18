@@ -1,11 +1,6 @@
 #include <bits/stdc++.h>
 #define int long long
 using namespace std;
-#ifndef ONLINE_JUDGE
-#define dout(...) cerr << "Line:" << __LINE__ << " [" << #__VA_ARGS__ << "] = ["; _print(__VA_ARGS__)
-#else
-#define dout(...)
-#endif
 struct SegmentTree {
     vector<int> sgt;
     vector<int> a;
@@ -17,16 +12,6 @@ struct SegmentTree {
     }
     int combine(int a, int b) {
         return a + b;        // ➜ sum
-    }
-    void build (int node, int l, int r) {
-        if (l == r) {
-            sgt[node] = a[l];
-            return;
-        }
-        int mid = l + (r - l) / 2;
-        build(node * 2, l, mid);
-        build(node * 2 + 1, mid + 1, r);
-        sgt[node] = combine(sgt[2 * node], sgt[2 * node + 1]);
     }
     void update(int node, int l, int r, int idx, int value) {
         if (l == r) {
@@ -53,11 +38,12 @@ struct SegmentTree {
         int right = query(node * 2 + 1, mid + 1, r, ql, qr);
         return combine(left, right);
     }
-    void build() { build(1, 1, n); }
     void update(int idx, int val) { update(1, 1, n, idx, val); }
     int query(int l, int r) { return query(1, 1, n, l, r); }
 };
 signed main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL), cout.tie(NULL);
     int n, q;
     cin >> n >> q;
 
@@ -66,7 +52,7 @@ signed main() {
         cin >> a[i];
     }
 
-    vector<int> adj[n + 1];
+    vector<vector<int>> adj(n + 1);
     for (int i = 0; i < n - 1; i++) {
         int u, v;
         cin >> u >> v;
@@ -86,30 +72,29 @@ signed main() {
         }
         out[u] = cnt++;
     };
-    dfs(1, 0);
 
-    SegmentTree st(2 * n + 1);
+    dfs(1, 0);
+    SegmentTree st(cnt);
     for (int i = 1; i <= n; i++) {
-        st.a[in[i]] = a[i];
-        st.a[out[i]] = -a[i];
+        st.update(in[i], a[i]);
     }
-    st.build();
 
     while (q--) {
         int qt;
         cin >> qt;
 
         if (qt == 1) {
-            int s, x;
-            cin >> s >> x;
-            st.update(in[s], x);
-            st.update(out[s], -x);
+            int id, x;
+            cin >> id >> x;
+            st.update(in[id], x);
         } else {
-            int s;
-            cin >> s;
-            cout << st.query(in[1], in[s]) << endl;
+            int node;
+            cin >> node;
+
+            int l = in[node];
+            int r = out[node];
+            cout << st.query(l, r) << endl;
         }
     }
-
     return 0;
 }

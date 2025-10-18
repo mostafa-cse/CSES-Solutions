@@ -1,62 +1,54 @@
 #include <bits/stdc++.h>
+#define int long long
 using namespace std;
-
-const int N = 200001;
-
-int parent[N];
-int depth[N];
-int jump[N];
-int jump_size[N];
-vector<int> g[N];
-
-void dfs(int node) {
-    for (int child : g[node]) {
-        depth[child] = depth[node] + 1;
-        parent[child] = node;
-        jump[child] = node;
-        jump_size[child] = 1;
-        if (jump[node] && jump[jump[node]] &&
-            jump_size[node] == jump_size[jump[node]]) {
-            jump[child] = jump[jump[node]];
-            jump_size[child] = jump_size[node] * 2 + 1;
+const int MAXN = 2e5 + 1;
+int depth[MAXN], jump[MAXN], parent[MAXN], jumpSize[MAXN];
+vector<int> adj[MAXN];
+void dfs(int u) {
+    for (int v : adj[u]) {
+        depth[v] = depth[u] + 1;
+        parent[v] = u;
+        jump[v] = u;
+        jumpSize[v] = 1;
+        if (jump[u] && jump[jump[u]] && jumpSize[u] == jumpSize[jump[u]]) {
+            jump[v] = jump[jump[u]];
+            jumpSize[v] = jumpSize[u] * 2 + 1;
         }
-        dfs(child);
+        dfs(v);
     }
 }
-
-int make_jumps(int x, int k) {
-    if (depth[x] < k) {
+int Jump(int node, int j) {
+    if (depth[node] < j) {
         return -1;
     }
-    while (k) {
-        if (jump_size[x] <= k) {
-            k -= jump_size[x];
-            x = jump[x];
+    while (j > 0) {
+        if (jumpSize[node] <= j) {
+            j -= jumpSize[node];
+            node = jump[node];
         } else {
-            k--;
-            x = parent[x];
+            j -= 1;
+            node= parent[node];
         }
     }
-    return x;
+    return node;
 }
+signed main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
 
-int main() {
     int n, q;
-
     cin >> n >> q;
 
-    for (int i = 2; i <= n; ++i) {
+    for (int i = 2; i <= n; i++) {
         int p;
         cin >> p;
-        g[p].push_back(i);
+        adj[p].push_back(i);
     }
-
     dfs(1);
-
-    for (int qi = 0; qi < q; ++qi) {
-        int x, k;
-        cin >> x >> k;
-
-        cout << make_jumps(x, k) << '\n';
+    while (q--) {
+        int node, j;
+        cin >> node >> j;
+        cout << Jump(node, j) << '\n';
     }
+    return 0;
 }

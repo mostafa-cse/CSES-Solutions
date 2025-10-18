@@ -1,10 +1,12 @@
 #include <bits/stdc++.h>
+#define int long long
 using namespace std;
-
 struct FCBLCA {
     int n;
     vector<vector<int>> adj;
     vector<int> depth;
+    vector<int> parent;
+    vector<int> dp;
 
     vector<int> euler;
     vector<int> eulerDepth;
@@ -27,13 +29,8 @@ struct FCBLCA {
         adj.assign(n, {});
         depth.assign(n, 0);
         first.assign(n, -1);
-        euler.clear();
-        eulerDepth.clear();
-        blockId.clear();
-        blockMinIdx.clear();
-        inBlock.clear();
-        st.clear();
-        lg.clear();
+        parent.assign(n, 0);
+        dp.assign(n, 0);
         B = 1; m = 0; nb = 0;
     }
 
@@ -46,6 +43,7 @@ struct FCBLCA {
         depth[u] = d;
         first[u] = (int)euler.size();
         euler.push_back(u);
+        parent[u] = p;
         eulerDepth.push_back(d);
         for (int v : adj[u]) if (v != p) {
             dfs(v, u, d + 1);
@@ -104,7 +102,7 @@ struct FCBLCA {
         m = (int)euler.size();
 
         int logm = (m > 1) ? (31 - __builtin_clz(m)) : 0;
-        B = max(1, logm / 2);
+        B = max(1ll, logm / 2);
         nb = (m + B - 1) / B;
 
         buildInBlockTables();
@@ -128,7 +126,7 @@ struct FCBLCA {
             }
             blockId[b] = mask;
 
-            int rel = inBlock[mask][0][max(0, len - 1)];
+            int rel = inBlock[mask][0][max(0ll, len - 1)];
             blockMinIdx[b] = start + rel;
         }
 
@@ -175,34 +173,51 @@ struct FCBLCA {
 
         return euler[best];
     }
-
+    int dfsAns(int u, int p) {
+        for (int v : adj[u]) {
+            if (v != p) {
+                dfsAns(v, u);
+                dp[u] += dp[v];
+            }
+        }
+        return dp[u];
+    }
     inline int dist(int u, int v) const {
         int w = lca(u, v);
         return depth[u] + depth[v] - 2 * depth[w];
     }
 };
-
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
+signed main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL), cout.tie(NULL);
     int n, q;
-    if (!(cin >> n >> q)) return 0;
+    cin >> n >> q;
 
-    FCBLCA lca(n);
-    for (int i = 1; i < n; ++i) {
-        int u, v;
-        cin >> u;
-        --u;
-        v = i;
-        lca.add_edge(u, v);
+    FCBLCA algo(n);
+    for (int i = 1; i < n; i++) {
+        int a, b;
+        cin >> a >> b;
+        a--, b--;
+        algo.add_edge(a, b);
     }
-    // Root can be any node; 0 (1 in 1-based) is conventional for CSES
-    lca.build(0);
+    algo.build(0);
 
     while (q--) {
-        int a, b; cin >> a >> b; --a; --b;
-        cout << (lca.lca(a, b) + 1) << '\n';
+        int a, b;
+        cin >> a >> b;
+        a -= 1, b -= 1;
+
+        algo.dp[a]++;
+        algo.dp[b]++;
+        int lca = algo.lca(a, b);
+        algo.dp[lca]--;
+        if (algo.parent[lca] >= 0) {
+            algo.dp[algo.parent[lca]]--;
+        }
+    }
+    algo.dfsAns(0, -1);
+    for (int i = 0; i < n; i++) {
+        cout << algo.dp[i] << " ";
     }
     return 0;
 }

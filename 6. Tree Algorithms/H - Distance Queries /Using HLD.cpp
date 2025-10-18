@@ -36,9 +36,13 @@ struct HLD {
 		return node;
 	}
 	int getLCA(int x, int y) const {
-		if (info[x].depth < info[y].depth) swap(x, y);
+		if (info[x].depth < info[y].depth) {
+			swap(x, y);
+		}
 		x = kthPar(x, info[x].depth - info[y].depth);
-		if (x == y) return x;
+		if (x == y) {
+			return x;
+		}
 		while(x != y) {
 			if(info[x].jump == info[y].jump) {
 				x = info[x].par;
@@ -61,16 +65,16 @@ signed main() {
     cin >> n >> q;
     vector<vector<int>>adj(n + 1);
     for (int i = 2; i <= n; i++) {
-        int p;
-        cin >> p;
-
-        adj[p].push_back(i);
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
     HLD algo(adj, 1);
     while (q--) {
         int a, b;
         cin >> a >> b;
-        cout << algo.getLCA(a, b) << endl;
+        cout << algo.distEdges(a, b) << endl;
     }
     return 0;
 }

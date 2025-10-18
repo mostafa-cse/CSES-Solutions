@@ -76,15 +76,15 @@ signed main() {
     }
 
     vector<int> in(n + 1, 0), out(n + 1, 0);
-    int cnt = 1;
+    int cnt = 0;
     function<void(int, int)> dfs = [&](int u, int p) -> void {
-        in[u] = cnt++;
+        in[u] = ++cnt;
         for (int v : adj[u]) {
             if (v != p) {
                 dfs(v, u);
             }
         }
-        out[u] = cnt++;
+        out[u] = ++cnt;
     };
     dfs(1, 0);
 
@@ -110,6 +110,5 @@ signed main() {
             cout << st.query(in[1], in[s]) << endl;
         }
     }
-
     return 0;
 }

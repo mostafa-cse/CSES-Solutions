@@ -6,78 +6,62 @@ using namespace std;
 #else
 #define dout(...)
 #endif
+const int LOGN = 21;
+vector<vector<int>> adj;
+vector<vector<int>> up;
+vector<int> lvl;
+void dfs(int u, int p, int l) {
+    lvl[u] = l;
+    up[u][0] = p;
+    for (int i = 1; i < LOGN; ++i) {
+        up[u][i] = up[up[u][i - 1]][i - 1];
+    }
+    for (int v : adj[u]) {
+        if (v != p) {
+            dfs(v, u, l + 1);
+        }
+    }
+}
+int getLCA(int u, int v) {
+    if (lvl[u] < lvl[v]) {
+        swap(u, v);
+    }
+    for (int i = LOGN - 1; i >= 0; --i) {
+        if (lvl[u] - (1 << i) >= lvl[v]) {
+            u = up[u][i];
+        }
+    }
+    if (u == v) {
+        return u;
+    }
+    for (int i = LOGN - 1; i >= 0; --i) {
+        if (up[u][i] != up[v][i]) {
+            u = up[u][i];
+            v = up[v][i];
+        }
+    }
+    return up[u][0];
+}
 signed main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr), cout.tie(nullptr);
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
     int n, q;
     cin >> n >> q;
-
-    vector<vector<int>> up(n + 1, vector<int>(21, 0));
-    vector<vector<int>> adj(n + 1);
-    for (int i = 2; i <= n; i++) {
+    adj.resize(n + 1);
+    up.assign(n + 1, vector<int>(LOGN, 0));
+    lvl.resize(n + 1);
+    for (int i = 0; i < n - 1; i++) {
         int u, v;
         cin >> u >> v;
-        up[v][0] = u;
         adj[u].push_back(v);
         adj[v].push_back(u);
     }
-
-    for (int b = 1; b < 21; b++) {
-        for (int node = 1; node <= n; node++) {
-            up[node][b] = up[ up[node][b - 1] ][b - 1];
-        }
-    }
-
-    vector<int> lvl(n + 1, 0), parent(n + 1, -1);
-    queue<int> qq;
-    qq.push(1);
-    lvl[1] = 1;
-    parent[1] = 1;
-    while (!qq.empty()) {
-        int u = qq.front();
-        qq.pop();
-        for (int v : adj[u]) {
-            if (lvl[v] == 0) {
-                lvl[v] = lvl[u] + 1;
-                parent[v] = u;
-                qq.push(v);
-            }
-        }
-    }
-
+    dfs(1, 1, 0);
     while (q--) {
         int u, v;
         cin >> u >> v;
-
-        int lu = lvl[u];
-        int lv = lvl[v];
-        auto lift = [&](int a, int d) -> int {
-            for (int i = 20; i >= 0; --i) {
-                if (d & (1LL << i)) a = up[a][i];
-            }
-            return a;
-        };
-        if (lvl[u] > lvl[v]) {
-            u = lift(u, lvl[u] - lvl[v]);
-        } else if (lvl[u] < lvl[v]) {
-            v = lift(v, lvl[v] - lvl[u]);
-        }
-
-        int LCAnode = -1;
-        if (lu == lv) {
-            cout << 0 << endl;
-        } else {
-            int ans = abs(lu - lv) - 1;
-            for (int i = 20; i >= 0; --i) {
-                if (up[u][i] != up[v][i]) {
-                    u = up[u][i];
-                    v = up[v][i];
-                }
-            }
-            LCAnode = up[u][0];
-            ans += min(lu, lv) - lvl[LCAnode];
-            cout << ans << endl;
-        }
+        int lca = getLCA(u, v);
+        cout << lvl[u] + lvl[v] - 2 * lvl[lca] << '\n';
     }
     return 0;
 }
