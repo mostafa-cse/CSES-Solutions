@@ -45,6 +45,7 @@ signed main() {
     int cnt = 1;
     function<void(int, int)> dfs = [&](int u, int p) -> void {
         in[u] = cnt++; // just realize that what is logic
+        // in[u] = ++cnt;
         for (int v : adj[u]) {
             if (v != p) {
                 depth[v] = depth[u] + 1;
@@ -60,6 +61,7 @@ signed main() {
     for (int i = 1; i <= n; i++) {
         ft.update(in[i], a[i]);
         ft.update(out[i], -a[i]);
+        // ft.update(out[i] + 1, -a[i]);
     }
 
 

@@ -1,20 +1,11 @@
 #include <bits/stdc++.h>
 using namespace std;
-
-template <class T> istream& operator >> (istream& is, vector<T>& a) { for (int i = 0; i < a.size(); i++) is >> a[i]; return is; }
-template <class T> ostream& operator << (ostream& os, const vector<T>& a) { cout << "{"; for (int i = 0; i < a.size(); i++) { if (i) cout << ", "; cout << a[i]; } cout << "}"; }
-const double PI = acos(-1);
-const double EPS = 1e-9;
-const long long MOD = 1000000007;
-const long long INFLL = 1000000000000000000;
-
 struct SumNode {
     long long sum;
     SumNode(long long v) { sum = v; }
     SumNode() { sum = 0; }
     SumNode(const SumNode& left, const SumNode& right) { sum = left.sum + right.sum; }
 };
-
 template <class Node, class T>
 struct SegmentTree {
     vector<T> A;
@@ -112,9 +103,13 @@ int main() {
     ios_base::sync_with_stdio(false);
 
     cin >> N >> Q;
+
     A.assign(N, 0);
-    cin >> A;
+    for (int i = 0; i < N; i++) {
+        cin >> A[i];
+    }
     adj.assign(N, vector<int>());
+
     for (int i = 0; i < N - 1; i++) {
         int a, b; cin >> a >> b;
         adj[a - 1].push_back(b - 1);
@@ -133,6 +128,5 @@ int main() {
             cout << hd.query(0, s - 1).sum << "\n";
         }
     }
-
     return 0;
 }
