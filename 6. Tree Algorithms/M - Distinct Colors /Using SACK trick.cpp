@@ -4,9 +4,23 @@ using namespace std;
 const int N = 2e5 + 5;
 vector<int> adj[N + 1];
 vector<int> c(N), freq(N), res(N);
-int IN[N], OUT[N], sz[N], bg[N];
+int IN[N], OUT[N], sz[N], heavy[N];
 int timer = 0, ans = 0;
 vector<int> euler;
+void dfs(int u, int p) {
+    euler.emplace_back(u);
+    IN[u] = timer++;
+    sz[u] = 1;
+    for (auto v : adj[u]) {
+        if (v == p) continue;
+        dfs(v, u);
+        sz[u] += sz[v];
+        if (heavy[u] == -1 || sz[v] > sz[heavy[u]]) {
+            heavy[u] = v;
+        }
+    }
+    OUT[u] = timer - 1;
+}
 void add(int u) {
     int col = c[u];
     freq[col]++;
@@ -17,28 +31,14 @@ void erase(int u) {
     freq[col]--;
     ans -= (freq[col] == 0);
 }
-void dfs0(int u, int p) {
-    euler.emplace_back(u);
-    IN[u] = timer++;
-    sz[u] = 1;
+void dsu(int u, int p, bool keep) {
     for (auto v : adj[u]) {
-        if (v == p) continue;
-        dfs0(v, u);
-        sz[u] += sz[v];
-        if (bg[u] == -1 || sz[v] > sz[bg[u]]) {
-            bg[u] = v;
-        }
+        if (v == p || v == heavy[u]) continue;
+        dsu(v, u, false);
     }
-    OUT[u] = timer - 1;
-}
-void dfs(int u, int p, bool keep) {
-    for (auto v : adj[u]) {
-        if (v == p || v == bg[u]) continue;
-        dfs(v, u, false);
-    }
-    if (bg[u] != -1) dfs(bg[u], u, true);
+    if (heavy[u] != -1) dsu(heavy[u], u, true);
     for (auto x : adj[u]) {
-        if (x != p && x != bg[u]) {
+        if (x != p && x != heavy[u]) {
             for (int i = IN[x]; i <= OUT[x]; i++) {
                 add(euler[i]);
             }
@@ -52,31 +52,29 @@ void dfs(int u, int p, bool keep) {
         }
     }
 }
-void solve() {
-}
 signed main() {
-    int n; cin >> n;
-    memset(bg, -1, sizeof bg);
-    vector<pair<int, int>> comp(n);
+    int n;
+    cin >> n;
+
+    memset(heavy, -1, sizeof heavy);
     for (int i = 1; i <= n; i++) {
         cin >> c[i];
-        comp[i - 1] = {c[i], i};
     }
-    sort(comp.begin(), comp.end());
-    int x = 0;
-    c[comp[0].second] = x;
+    vector<int> a = c;
+
+    sort(a.begin(), a.end());
     for (int i = 1; i < n; i++) {
-        if (comp[i].first != comp[i - 1].first) x++;
-        c[comp[i].second] = x;
+        c[i] = lower_bound(a.begin(), a.end(), c[i]) - a.begin();
     }
+
     for (int i = 0; i < n - 1; i++) {
         int u, v; cin >> u >> v;
         adj[u].emplace_back(v);
         adj[v].emplace_back(u);
     }
     timer = 0;
-    dfs0(1, -1);
-    dfs(1, -1, false);
+    dfs(1, -1);
+    dsu(1, -1, false);
     for (int i = 1; i <= n; i++) cout << res[i] << ' ';
     cout << '\n';
     return 0;

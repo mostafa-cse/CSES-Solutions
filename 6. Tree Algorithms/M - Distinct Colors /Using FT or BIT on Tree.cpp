@@ -2,41 +2,48 @@
 using namespace std;
 
 const int maxn = 2e5+4;
-int n, a[maxn], tin[maxn], tout[maxn], last[maxn], nit[maxn], ans[maxn];
+int n, a[maxn], in[maxn], out[maxn], last[maxn], order[maxn], ans[maxn];
 vector<int> adj[maxn];
 
-int bit[maxn];
-void update(int i, int v) {
-    for (; i <= n; i += i & -i) {
-        bit[i] += v;
+class Fenwick {
+    int n;
+    std::vector<int> bit;
+
+public:
+    explicit Fenwick(int n) : n(n), bit(n + 1, 0) {}
+
+    void update(int idx, int delta) {
+        for (; idx <= n; idx += idx & -idx) {
+            bit[idx] += delta;
+        }
     }
-}
-int get(int i) {
-    int res = 0;
-    for (; i > 0; i -= i & -i) {
-        res += bit[i];
+
+    int query(int idx) const {
+        int res = 0;
+        for (; idx > 0; idx -= idx & -idx) {
+            res += bit[idx];
+        }
+        return res;
     }
-    return res;
-}
-int query(int l, int r) {
-    return get(r) - get(l-1);
-}
+
+    int query(int l, int r) const {
+        return query(r) - query(l - 1);
+    }
+};
 
 int t = 0;
 void dfs(int u = 1, int p = 0) {
-    tin[u] = ++t;
-    nit[tin[u]] = u;
+    in[u] = ++t;
+    order[t] = u;
 
     for (int v: adj[u]) {
         if (v != p) {
             dfs(v, u);
         }
     }
-    tout[u] = t;
+    out[u] = t;
 }
-
 vector<int> idx[maxn];
-
 int32_t main (){
     ios_base::sync_with_stdio (false);
     cin.tie (nullptr);
@@ -47,33 +54,39 @@ int32_t main (){
         cin >> a[i];
         V.push_back(a[i]);
     }
+
     sort(V.begin(), V.end());
     for (int i = 1; i <= n; i++) {
         a[i] = lower_bound(V.begin(), V.end(), a[i]) - V.begin() + 1;
     }
 
     for (int i = 1; i < n; i++) {
-        int x, y; cin >> x >> y;
+        int x, y;
+        cin >> x >> y;
+
         adj[x].push_back(y);
         adj[y].push_back(x);
     }
     dfs();
-
     for (int i = 1; i <= n; i++) {
-        idx[tout[i]].push_back(i);
+        idx[out[i]].push_back(i);
     }
 
+    Fenwick bit(n);
     for (int r = 1; r <= n; r++) {
-        update(r, 1);
-        int u = nit[r];
-        if (last[a[u]] > 0) {
-            update(last[a[u]], -1);
+        bit.update(r, 1);
+
+        int u = order[r];
+        int color = a[u];
+
+        if (last[color] > 0) {
+            bit.update(last[color], -1); // delete previously added color
         }
-        last[a[u]] = r;
+        last[color] = r; // add last time added color 
 
         for (int i: idx[r]) {
-            int l = tin[i];
-            ans[i] = query(l, r);
+            int l = in[i];
+            ans[i] = bit.query(l, r);
         }
     }
     for (int i = 1; i <= n; i++) {

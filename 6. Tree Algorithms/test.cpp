@@ -1,83 +1,135 @@
 #include <bits/stdc++.h>
 using namespace std;
+const int MAX_NODES = 200'000;
+const int NIL = -1;
 
-const int N = 2e5 + 5;
-vector<int> adj[N + 1];
-vector<int> c(N), freq(N), res(N);
-int IN[N], OUT[N], sz[N], bg[N];
-int timer = 0, ans = 0;
-vector<int> euler;
-void add(int u) {
-    int col = c[u];
-    freq[col]++;
-    ans += (freq[col] == 1);
+struct List
+{
+    int val, next;
+};
+
+struct node
+{
+    int color, distinct;
+    int start;
+    int ptr;
+};
+
+struct fenwick_tree
+{
+    int v[MAX_NODES + 1];
+    std::unordered_map<int, int> last_pos;
+    int n, total;
+
+    void init(int n)
+    {
+        this->n = n;
+        total = 0;
+    }
+
+    void add(int pos, int val)
+    {
+        total += val;
+        do
+        {
+            v[pos] += val;
+            pos += pos & -pos;
+        } while (pos <= n);
+    }
+
+    void colorize(int pos, int color)
+    {
+        auto last = last_pos.find(color);
+        if (last != last_pos.end())
+        {
+            add(last->second, -1);
+            last->second = pos;
+        }
+        else
+        {
+            last_pos[color] = pos;
+        }
+        add(pos, +1);
+    }
+
+    int suffix_count(int pos)
+    {
+        int s = total;
+        pos--;
+        while (pos)
+        {
+            s -= v[pos];
+            pos &= pos - 1;
+        }
+        return s;
+    }
+};
+
+List adj[2 * MAX_NODES];
+node n[MAX_NODES + 1];
+fenwick_tree fen;
+int num_nodes;
+
+void add_neighbor(int u, int v)
+{
+    static int ptr = 0;
+    adj[ptr] = {v, n[u].ptr};
+    n[u].ptr = ptr++;
 }
-void erase(int u) {
-    int col = c[u];
-    freq[col]--;
-    ans -= (freq[col] == 0);
+
+void read_input_data()
+{
+    scanf("%d", &num_nodes);
+
+    for (int u = 1; u <= num_nodes; u++)
+    {
+        scanf("%d", &n[u].color);
+        n[u].ptr = NIL;
+    }
+
+    for (int i = 0; i < num_nodes - 1; i++)
+    {
+        int u, v;
+        scanf("%d %d", &u, &v);
+        add_neighbor(u, v);
+        add_neighbor(v, u);
+    }
 }
-void dfs0(int u, int p) {
-    euler.emplace_back(u);
-    IN[u] = timer++;
-    sz[u] = 1;
-    for (auto v : adj[u]) {
-        if (v == p) continue;
-        dfs0(v, u);
-        sz[u] += sz[v];
-        if (bg[u] == -1 || sz[v] > sz[bg[u]]) {
-            bg[u] = v;
+
+void dfs(int u)
+{
+    static int time = 0;
+
+    n[u].start = ++time;
+    fen.colorize(time, n[u].color);
+
+    for (int ptr = n[u].ptr; ptr != NIL; ptr = adj[ptr].next)
+    {
+        int v = adj[ptr].val;
+        if (!n[v].start)
+        {
+            dfs(v);
         }
     }
-    OUT[u] = timer - 1;
+
+    n[u].distinct = fen.suffix_count(n[u].start);
 }
-void dfs(int u, int p, bool keep) {
-    for (auto v : adj[u]) {
-        if (v == p || v == bg[u]) continue;
-        dfs(v, u, false);
+
+void write_output_data()
+{
+    for (int u = 1; u <= num_nodes; u++)
+    {
+        printf("%d ", n[u].distinct);
     }
-    if (bg[u] != -1) dfs(bg[u], u, true);
-    for (auto x : adj[u]) {
-        if (x != p && x != bg[u]) {
-            for (int i = IN[x]; i <= OUT[x]; i++) {
-                add(euler[i]);
-            }
-        }
-    }
-    add(u);
-    res[u] = ans;
-    if (!keep) {
-        for (int i = IN[u]; i <= OUT[u]; i++) {
-            erase(euler[i]);
-        }
-    }
+    printf("\n");
 }
-void solve() {
-}
-signed main() {
-    int n; cin >> n;
-    memset(bg, -1, sizeof bg);
-    vector<pair<int, int>> comp(n);
-    for (int i = 1; i <= n; i++) {
-        cin >> c[i];
-        comp[i - 1] = {c[i], i};
-    }
-    sort(comp.begin(), comp.end());
-    int x = 0;
-    c[comp[0].second] = x;
-    for (int i = 1; i < n; i++) {
-        if (comp[i].first != comp[i - 1].first) x++;
-        c[comp[i].second] = x;
-    }
-    for (int i = 0; i < n - 1; i++) {
-        int u, v; cin >> u >> v;
-        adj[u].emplace_back(v);
-        adj[v].emplace_back(u);
-    }
-    timer = 0;
-    dfs0(1, -1);
-    dfs(1, -1, false);
-    for (int i = 1; i <= n; i++) cout << res[i] << ' ';
-    cout << '\n';
+
+int main()
+{
+    read_input_data();
+    fen.init(num_nodes);
+    dfs(1);
+    write_output_data();
+
     return 0;
 }

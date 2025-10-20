@@ -3,79 +3,94 @@ using namespace std;
 
 #define N 200010
 vector<int> g[N];
-int c[N];
-int b[N];
+int c[N], sortC[N];
 int siz[N];
 int son[N];
+int n;
 
-void dfs(int x,int fa) {
-    siz[x] = 1;
-    for(int y : g[x]) {
-        if(y == fa) continue;
-        dfs(y,x);
-        siz[x] += siz[y];
-        if(siz[y] > siz[son[x]]) son[x] = y;
+void dfs(int u,int p) {
+    siz[u] = 1;
+    for(int v : g[u]) {
+        if(v != p) {
+            dfs(v, u);
+            siz[u] += siz[v];
+            // heavy
+            if (siz[v] > siz[son[u]]) {
+                son[u] = v;
+            }
+        }
     }
 }
-
-int tong[N]; // 桶保留数了
-int cnt = 0;
-void dfs_clear(int x,int fa) {
-    --tong[b[x]];
-    if(tong[b[x]] == 0) --cnt;
-    for(int y : g[x]) {
-        if(y == fa) continue;
-        dfs_clear(y,x);
+int tong[N], cnt = 0;
+void remove(int u,int p) {
+    --tong[c[u]];
+    cnt -= (tong[c[u]] == 0);
+    for(int v : g[u]) {
+        if(v != p) {
+            remove(v, u);
+        }
     }
 }
-void dfs_add(int x,int fa) {
-    if(tong[b[x]] == 0) ++cnt;
-    ++tong[b[x]];
-    for(int y : g[x]) {
-        if(y == fa) continue;
-        dfs_add(y,x);
+void add(int u,int p) {
+    cnt += (tong[c[u]] == 0);
+    ++tong[c[u]];
+    for(int v : g[u]) {
+        if(v != p) {
+            add(v, u);
+        }
     }
 }
 int ans[N];
-void dsu(int x,int fa) {
-    for(int y : g[x]) {
-        if(y == fa || y == son[x]) continue;
-        dsu(y,x);
-        dfs_clear(y,x);
-    }
-    if(son[x]) dsu(son[x],x);
-    if(tong[b[x]] == 0) ++cnt;
-    ++tong[b[x]];
-    for(int y : g[x]) {
-        if(y == fa || y == son[x]) continue;
-        dfs_add(y,x);
-    }
-    ans[x] = cnt;
-}
-int n;
-
-#define PII pair<int,int>
-PII nos[N];
-signed main() {
-    cin.tie(0) -> sync_with_stdio(0);
-    cin >> n;
-    for(int i = 1; i <= n; ++i) cin >> c[i];
-    for(int i = 1; i <= n; ++i) nos[i] = {c[i],i};
-    sort(nos + 1,nos + 1 + n);
-    for(int i = 1; i <= n; ++i) {
-        if(nos[i].first == nos[i - 1].first) {
-            b[nos[i].second] = b[nos[i - 1].second];
-        }else{
-            b[nos[i].second] = b[nos[i - 1].second] + 1;
+void dsu(int u,int p) {
+    for(int v : g[u]) {
+        if(v != p and v != son[u]) {
+            dsu(v,u);
+            remove(v,u);
         }
     }
+    if (son[u]) {
+        dsu(son[u], u);
+    }
+    cnt += (tong[c[u]] == 0);
+    ++tong[c[u]];
+
+    for(int v : g[u]) {
+        if(v != p || v != son[u]) {
+            add(v, u);
+        }
+    }
+    ans[u] = cnt;
+}
+
+signed main() {
+    cin.tie(0);
+    ios_base::sync_with_stdio(0);
+    cin >> n;
+    for (int i = 1; i <= n; ++i) {
+        cin >> c[i];
+        sortC[i] = c[i];
+    }
+
+    // co-ordinate compression
+    sort(sortC + 1, sortC + 1 + n);
+    for (int i = 1; i <= n; ++i) {
+        c[i] = lower_bound(sortC + 1, sortC + n + 1, c[i]) - sortC - 1;
+    }
+
     for(int i = 1; i < n; ++i) {
         int a,b;
         cin >> a >> b;
+
         g[a].push_back(b);
         g[b].push_back(a);
     }
+
     dfs(1,0);
+
     dsu(1,0);
-    for(int i = 1; i <= n; ++i) cout << ans[i] << " ";
+
+    for (int i = 1; i <= n; ++i) {
+        cout << ans[i] << " ";
+    }
+    return 0;
 }
