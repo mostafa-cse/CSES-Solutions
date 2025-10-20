@@ -49,12 +49,12 @@ Solutions are grouped by topic and named by problem title or ID. Each folder con
 > 🧠 This repository is actively being updated to cover **all workbook problems** across categories.
 
 We aim to complete the following topics:
-1. **Introductory Problems**
-2. **Sorting and Searching**
-3. **Dynamic Programming**
-4. **Graph Algorithms**
-5. **Tree Algorithms**
-6. **Range Queries**
+1. **✅ Introductory Problems**
+2. **✅ Sorting and Searching**
+3. **✅ Dynamic Programming**
+4. **✅ Graph Algorithms**
+5. **✅ Tree Algorithms**
+6. **✅ Range Queries**
 7. **Mathematics**
 8. **String Algorithms**
 9. **Geometry**
