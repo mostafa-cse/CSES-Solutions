@@ -1,0 +1,4 @@
+More Problems Idea :
+    1. determine Most frequent Number/color
+    2. determine Leat frequent Number/ color
+    

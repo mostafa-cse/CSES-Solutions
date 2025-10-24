@@ -1,47 +1,76 @@
+// https://cses.fi/problemset/hack/2081/entry/14782110/
 #include <bits/stdc++.h>
 using namespace std;
 
-const int N = 200001;
-int n, k;
-vector<int> g[N];
-long long answer;
+typedef long long ll;
 
-void merge(deque<int> &a, deque<int> &b) {
-    if (b.size() > a.size()) {
-        swap(a, b);
-    }
-    int bs = b.size();
-    for (int i = 0; i < bs; ++i) {
-        if (0 <= k - i && k - i < (int)a.size()) {
-            answer += b[i] * a[k - i];
+#define sz(x) ((int)x.size())
+#define all(a) (a).begin(), (a).end()
+
+const int N = 2e5 + 7;
+const ll MOD = 1e9 + 7;
+
+int n, k1, k2;
+int h[N];
+ll ans;
+vector<int> adj[N];
+
+deque<ll> dfs(int u, int p = 0){
+     deque<ll> resu = {1};
+
+     for(int v:adj[u]){
+        if(v == p) continue;
+        auto resv = dfs(v, u);
+        resv.push_front(resv[0]);
+
+        if (sz(resu) < sz(resv)) {
+            swap(resu, resv);
         }
-    }
-    for (int i = 0; i < bs; ++i) {
-        a[i] += b[i]; // resize the depth of each node
-    }
+
+        for(int i = 0; i < sz(resv); ++i){
+            int p1 = max(0, k1 - i);
+            int p2 = max(0, k2 - i + 1);
+
+            ll tmp = resv[i];
+            if(i + 1 < sz(resv)) tmp -= resv[i+1];
+
+            if(p1 < sz(resu)) ans += tmp * resu[p1];
+            if(p2 < sz(resu)) ans -= tmp * resu[p2];
+        }
+
+        for(int i = sz(resv) - 1; i >= 0; --i){
+            resu[i] += resv[i];
+        }
+     }
+
+     return resu;
 }
 
-deque<int> dfs(int node, int parent) {
-    deque<int> ret{1};
-    for (int child : g[node]) {
-        if (child != parent) {
-            auto child_depths = dfs(child, node);
-            child_depths.push_front(0);
-            merge(ret, child_depths);
-        }
+void solve(){
+    cin >> n >> k1 >> k2;
+    for(int i = 1, u, v; i < n; ++i){
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
-    return ret;
+
+    dfs(1);
+
+    cout << ans;
 }
 
-int main() {
-    cin >> n >> k;
-
-    for (int i = 1; i <= n - 1; ++i) {
-        int a, b;
-        cin >> a >> b;
-        g[a].push_back(b);
-        g[b].push_back(a);
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0); cout.tie(0);
+    #ifdef LOCAL
+        freopen("test.inp","r",stdin);
+        freopen("test.out","w",stdout);
+        freopen("test.err","w",stderr);
+    #endif
+    int ts=1;
+    // cin>>ts;
+    while(ts--){
+        solve();
     }
-    dfs(1, -1);
-    cout << answer << '\n';
+    return 0;
 }
