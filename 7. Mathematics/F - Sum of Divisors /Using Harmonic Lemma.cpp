@@ -8,16 +8,18 @@ signed main() {
     cin >> n;
 
     int ans = 0;
-    int l = 1;
     function<int(int)> Sum = [](int x) -> int {
+        if (x <= 0) return 0;
+        x %= Mod;
         return (x * (x + 1) % Mod) % Mod;
     };
-    while (l <= n) {
-        int k = n / l;
-        int r = n / k;
-        ans += ((Sum(r) - Sum(l - 1) + Mod) % Mod * k) % Mod;
+    int left = 1;
+    while (left <= n) {
+        int constVal = n / left;
+        int right = n / constVal;
+        ans += ((Sum(right) - Sum(left - 1) + Mod) % Mod * constVal) % Mod;
         ans %= Mod;
-        l = r + 1;
+        left = right + 1;
     }
     cout << (ans * (Mod + 1) / 2) % Mod << endl;
     return 0;
