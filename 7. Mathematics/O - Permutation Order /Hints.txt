@@ -1,0 +1,7 @@
+determine for Large value of N.
+
+where N <= 5e5
+Research about Big value
+
+
+https://vjudge.net/solution/65209018/oBzFlDClNAYthxymQ8g6
