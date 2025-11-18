@@ -57,27 +57,17 @@ signed main() {
     cin >> n;
 
     vector<vector<int>> f = {
-                                {1, 1, 1, 1, 1, 1},
-                                {1, 0, 0, 0, 0, 0},
-                                {0, 1, 0, 0, 0, 0},
-                                {0, 0, 1, 0, 0, 0},
-                                {0, 0, 0, 1, 0, 0},
-                                {0, 0, 0, 0, 1, 0}
+                                {1, 1, 1, 1, 1, 1}, // a+b+c+d+e+f a b c d e
+                                {1, 0, 0, 0, 0, 0}, //       a     0 0 0 0 0
+                                {0, 1, 0, 0, 0, 0}, //       0     b 0 0 0 0
+                                {0, 0, 1, 0, 0, 0}, //       0     0 c 0 0 0
+                                {0, 0, 0, 1, 0, 0}, //       0     0 0 d 0 0
+                                {0, 0, 0, 0, 1, 0} //        0     0 0 0 e 0
                             };
     Matrix res(f);
-    for (int i = 0; i < n; i++) {
-        Matrix ans = pw(res, i);
-
-        cout << "For "<< i << "th exponential : \n";
-        for (int r = 0; r < 6; r++) {
-            for (int c = 0; c < 6; c++) {
-                cout << ans.mat[r][c] << " ";
-            }
-            cout << endl;
-        }
-        cout << endl;
-    }
     res = pw(res, n);
     cout << res.mat[0][0] << endl;
     return 0;
 }
+
+
