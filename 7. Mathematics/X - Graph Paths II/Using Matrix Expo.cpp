@@ -1,8 +1,9 @@
 #include <bits/stdc++.h>
 #define int long long
 using namespace std;
-const int MOD = 1e9 + 7;
-const long long MOD2 = static_cast<long long>(MOD) * MOD;
+
+const int INF = (1LL << 60);
+
 struct Matrix {
     vector<vector<int>> mat;
     int n_rows, n_cols;
@@ -13,32 +14,33 @@ struct Matrix {
         : mat(values), n_rows(values.size()), n_cols(values[0].size()) {}
 
     static Matrix identity_matrix(int n) {
-        vector<vector<int>> values(n, vector<int>(n, 1e9));
+        vector<vector<int>> values(n, vector<int>(n, INF));
         for (int i = 0; i < n; i++)
             values[i][i] = 0;
-        return values;
+        return Matrix(values);
     }
 
     Matrix operator*(const Matrix& other) const {
-        int n = n_rows, m = other.n_cols;
-        vector<vector<int>> result(n_rows, vector<int>(n_cols, 0));
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < m; j++) {
-                long long tmp = 1e9;
-                for (int k = 0; k < n_cols; k++) {
-                    tmp = min(mat[i][k] + other.mat[k][j], tmp);
+        assert(n_cols == other.n_rows);
+        int n = n_rows, m = other.n_cols, K = n_cols;
+        vector<vector<int>> result(n, vector<int>(m, INF));
+        for (int i = 0; i < n; i++) {
+            for (int k = 0; k < K; k++) {
+                if (mat[i][k] == INF) continue;
+                for (int j = 0; j < m; j++) {
+                    if (other.mat[k][j] == INF) continue;
+                    result[i][j] = min(result[i][j], mat[i][k] + other.mat[k][j]);
                 }
-                result[i][j] = tmp;
             }
-
-        return move(Matrix(move(result)));
+        }
+        return Matrix(result);
     }
 };
 Matrix pw(Matrix a, int p) {
-    Matrix result = Matrix::identity_matrix(a.n_cols);
+    Matrix result = Matrix::identity_matrix(a.n_rows);
     while (p > 0) {
         if (p & 1)
-            result = a * result;
+            result = result * a;
         a = a * a;
         p >>= 1;
     }
@@ -46,22 +48,29 @@ Matrix pw(Matrix a, int p) {
 }
 
 signed main() {
-    int n, m, k;
-    cin >> n >> m >> k;
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
 
-    vector<vector<int>> mat(n + 1, vector<int>(n + 1, 1e9));
+    int n, m, k;
+    if (!(cin >> n >> m >> k)) return 0;
+
+    vector<vector<int>> mat(n, vector<int>(n, INF));
+
     for (int i = 0; i < m; i++) {
         int u, v, w;
         cin >> u >> v >> w;
-        mat[u - 1][v - 1] = min(mat[u - 1][v - 1], w);
+        u--; v--;
+        mat[u][v] = min(mat[u][v], w);
     }
 
-    Matrix res(mat);
-    res = pw(mat, k);
+    Matrix adj(mat);
+    Matrix res = pw(adj, k);
 
     int ans = res.mat[0][n - 1];
-    if (ans == 1e18)
-        ans = -1;
-    cout << ans % MOD << endl;
+
+    if (ans >= INF)
+        cout << -1 << endl;
+    else
+        cout << ans << endl;
     return 0;
 }
