@@ -24,7 +24,6 @@ struct Matrix {
         for (int i = 0; i < n; i++) {
             for (int k = 0; k < n_cols; k++) {
                 if (mat[i][k] == INF) continue;
-
                 for (int j = 0; j < m; j++) {
                     if (other.mat[k][j] == INF) continue;
                     result[i][j] = min(result[i][j], mat[i][k] + other.mat[k][j]);
@@ -63,7 +62,7 @@ signed main() {
     Matrix res = pw(mat, k);
 
     int ans = res.mat[0][n - 1];
-    if (ans >= 1e18) {
+    if (ans >= INF) {
         cout << -1 << endl;
     } else {
         cout << ans << endl;
