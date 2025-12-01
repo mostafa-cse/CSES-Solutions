@@ -1,44 +1,41 @@
 #include <bits/stdc++.h>
 #define int long long
 using namespace std;
+int n;
+double ans[65], dp[105][65];
 
 signed main() {
-    int n;
     cin >> n;
 
-    vector<double> ans(n);
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < 65; i++) {
         ans[i] = 1.0;
     }
 
-    int dp[101][65];
-    for (int start = 0; start < 8 * 8; start++) {
+    for (int i = 0; i < 64; i++) {
         memset(dp, 0, sizeof dp);
-        dp[0][start] = 1.00;
+        dp[0][i] = 1.00;
 
-        for (int k = 0; k < n; k++) {
-            for (int u = 0; u < 8 * 8; u++) {
+        for (int j = 0; j < n; j++) {
+            for (int k = 0; k < 64; k++) {
                 int cnt = 0;
-                vector<int> points;
-                if (u >= 8) points.push_back(u - 8);
-                if (u % 8 != 0) points.push_back(u - 1);
-                if (u % 8 != 7) points.push_back(u + 1);
-                if (u < 8 * 7) points.push_back(u + 8);
+                if (k % 8 != 0) cnt++;
+                if (k % 8 != 7) cnt++;
+                if (k / 8 != 0) cnt++;
+                if (k / 8 != 7) cnt++;
 
-                for (int v : points) {
-                    dp[k + 1][v] += dp[k][u] / points.size();
-                }
+                if (k % 8 != 0) dp[j + 1][k - 1] += dp[j][k] / cnt;
+                if (k % 8 != 7) dp[j + 1][k + 1] += dp[j][k] / cnt;
+                if (k / 8 != 0) dp[j + 1][k - 8] += dp[j][k] / cnt;
+                if (k / 8 != 7) dp[j + 1][k + 8] += dp[j][k] / cnt;
             }
         }
-        for (int u = 0; u < 8 * 8; u++) {
-            ans[u] *= (1 - dp[n][u]);
-        }
+        for (int j = 0; j < 64; j++) ans[j] *= (1 - dp[n][j]);
     }
 
     double expected = 0;
     for (int i = 0; i < 64; i++) {
         expected += ans[i];
     }
-    cout << expected;
+    cout << fixed << setprecision(6) << expected;
     return 0;
 }
