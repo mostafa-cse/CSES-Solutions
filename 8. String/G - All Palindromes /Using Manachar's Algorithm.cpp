@@ -68,12 +68,12 @@ int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     string s;
-    if (!(cin >> s)) return 0;
+    cin >> s;
 
-    cout << s.size() << endl;
     Manacher M(s);
-
     vector<int> ending = M.getEndingLengths();
-    for (int x : ending) cout << x << " ";
-    cout << "\n";
+    for (int x : ending) {
+        cout << x << " ";
+    }
+    return 0;
 }
