@@ -1,3 +1,9 @@
+/*
+    Author : M0stafa
+    Topic : String Algorithm
+    Algorithm : Trie with DP
+    DP trick : Bottom-Up approach
+*/
 #include <bits/stdc++.h>
 #define int long long
 using namespace std;

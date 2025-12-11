@@ -1,11 +1,12 @@
+/*
+    Author : M0stafa
+    Topic : String Algorithm
+    Algorithm : Trie with DP
+    DP trick : Top-Down approach
+*/
 #include <bits/stdc++.h>
 #define int long long
 using namespace std;
-#ifndef ONLINE_JUDGE
-#define dout(...) cerr << "Line:" << __LINE__ << " [" << #__VA_ARGS__ << "] = ["; _print(__VA_ARGS__)
-#else
-#define dout(...)
-#endif
 const int Mod = 1e9 + 7;
 struct Node {
     vector<int> next;
