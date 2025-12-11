@@ -1,11 +1,11 @@
+/*
+    Author : M0stafa
+    Topic : String Algorithm
+    Algorithm : KMP
+*/
 #include <bits/stdc++.h>
 #define int long long
 using namespace std;
-#ifndef ONLINE_JUDGE
-#define dout(...) cerr << "Line:" << __LINE__ << " [" << #__VA_ARGS__ << "] = ["; _print(__VA_ARGS__)
-#else
-#define dout(...)
-#endif
 vector<int> computeLPS(string &pattern) {
     int n = pattern.size();
     vector<int> lps(n, 0);

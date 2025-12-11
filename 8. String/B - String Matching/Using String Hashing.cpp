@@ -1,3 +1,8 @@
+/*
+    Author : M0stafa
+    Topic : String Algorithm
+    Algorithm : String Hashing
+*/
 #include <bits/stdc++.h>
 #define int long long
 using namespace std;
