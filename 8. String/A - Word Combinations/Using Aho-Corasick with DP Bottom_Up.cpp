@@ -1,6 +1,6 @@
 /*
-    Bottom-up DP with Aho-Corasick
-    dp[i] = number of ways to cover text[0..i-1]
+    Top-down DP with memoization + Aho-Corasick
+    solve(pos) = ways to cover text[pos..]
 */
 #include <bits/stdc++.h>
 #define int long long
@@ -14,9 +14,7 @@ struct AhoCorasick {
     vector<vector<int>> out;
     vector<int> out_link;
 
-    AhoCorasick() {
-        new_node();            // root = 0
-    }
+    AhoCorasick() { new_node(); }
 
     int new_node() {
         next.push_back({});
@@ -39,7 +37,6 @@ struct AhoCorasick {
 
     void build() {
         queue<int> q;
-        // initialize children of root
         for (int c = 0; c < 26; c++) {
             int v = next[0][c];
             if (v) {
@@ -47,73 +44,101 @@ struct AhoCorasick {
                 q.push(v);
             }
         }
-        // BFS
         while (!q.empty()) {
             int u = q.front(); q.pop();
             int f = link[u];
 
-            // output link
             out_link[u] = !out[f].empty() ? f : out_link[f];
 
-            // transitions
             for (int c = 0; c < 26; c++) {
                 int v = next[u][c];
                 if (v) {
                     link[v] = next[f][c];
                     q.push(v);
                 } else {
-                    next[u][c] = next[f][c]; // automaton transition
+                    next[u][c] = next[f][c];
                 }
             }
         }
     }
+
+    // same as your find_all
+    vector<pair<int,int>> find_all(string &text, const vector<int> &len) {
+        vector<pair<int,int>> ans;
+        int u = 0;
+        for (int pos = 0; pos < (int)text.size(); pos++) {
+            int i = text[pos] - 'a';
+            u = next[u][i];
+
+            int v = u;
+            while (v != -1) {
+                for (int id : out[v]) {
+                    int start = pos - len[id] + 1;
+                    ans.emplace_back(start, id);
+                }
+                v = out_link[v];
+            }
+        }
+        return ans;
+    }
 };
+
+string text;
+int n;
+vector<int> lenPat;
+vector<vector<int>> starts_at;
+vector<int> memo;
+vector<char> vis;
+
+int solve(int pos) {
+    if (pos == n) return 1;    
+    if (vis[pos]) return memo[pos];
+    vis[pos] = 1;
+
+    long long res = 0;
+    for (int id : starts_at[pos]) {
+        int L = lenPat[id];
+        int nxt = pos + L;
+        if (nxt <= n) {
+            res += solve(nxt);
+            if (res >= Mod) res -= Mod;
+        }
+    }
+    memo[pos] = (int)res;
+    return memo[pos];
+}
 
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    string text;
     cin >> text;
+    n = (int)text.size();
 
     int q;
     cin >> q;
 
     AhoCorasick ac;
-    vector<int> len(q);
+    lenPat.assign(q, 0);
     for (int i = 0; i < q; i++) {
-        string pat;
-        cin >> pat;
-        len[i] = (int)pat.size();
-        ac.insert(pat, i);
+        string t;
+        cin >> t;
+        lenPat[i] = (int)t.size();
+        ac.insert(t, i);
     }
     ac.build();
 
-    int n = (int)text.size();
-    vector<int> dp(n + 1, 0);
-    dp[0] = 1;
-
-    int u = 0; // current automaton state
-    for (int pos = 0; pos < n; pos++) {
-        int c = text[pos] - 'a';
-        u = ac.next[u][c]; // already includes failure transitions
-
-        // from prefix end at pos, transitions to future positions
-        int v = u;
-        while (v != -1) {
-            for (int id : ac.out[v]) {
-                int L = len[id];
-                int start = pos - L + 1;  // starting index of match
-                if (start >= 0) {
-                    // we extend any covering of prefix [0..start-1]
-                    dp[start + L] += dp[start];
-                    if (dp[start + L] >= Mod) dp[start + L] -= Mod;
-                }
-            }
-            v = ac.out_link[v];
+    vector<pair<int,int>> matches = ac.find_all(text, lenPat);
+    starts_at.assign(n, {});
+    for (auto [l, idx] : matches) {
+        if (l >= 0 && l < n) {
+            starts_at[l].push_back(idx);
         }
     }
 
-    cout << dp[n] % Mod << '\n';
+    memo.assign(n + 1, 0);
+    vis.assign(n + 1, 0);
+
+    cout << solve(0) % Mod << '\n';
     return 0;
 }
