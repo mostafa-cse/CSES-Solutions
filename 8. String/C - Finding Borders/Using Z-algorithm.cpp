@@ -6,6 +6,11 @@
 #include <bits/stdc++.h>
 #define int long long
 using namespace std;
+#ifndef ONLINE_JUDGE
+#define dout(...) cerr << "Line:" << __LINE__ << " [" << #__VA_ARGS__ << "] = ["; _print(__VA_ARGS__)
+#else
+#define dout(...)
+#endif
 vector<int> z_algo(string &s) {
     int n = s.size();
     vector<int> z(n);
@@ -30,6 +35,8 @@ signed main() {
 
     int n = s.size();
     auto z = z_algo(s);
+    dout(z);
+    
     for (int i = n - 1; i > 0; i--) {
         if (z[i] == n - i) {
             cout << n - i << " ";
