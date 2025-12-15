@@ -31,6 +31,9 @@ signed main() {
         if (z[i] == s.size() - i) {
             cout << i << " ";
         }
+        // if (z[i] + i == s.size()) {
+        //     cout << i << " ";
+        // }
     }
     cout << s.size() << endl;
     return 0;
