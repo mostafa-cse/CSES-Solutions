@@ -34,6 +34,9 @@ int main() {
 
     HashString h(s);
     for (int i = 1; i < n; i++) {
+        cerr << i << " " << n - 1 << endl;
+        cerr << 0 << " " << n - i - 1 << endl;
+        cerr << endl;
         if (h.hash(i, n - 1) == h.hash(0, n - i - 1)) {
             cout << i << " ";
         }

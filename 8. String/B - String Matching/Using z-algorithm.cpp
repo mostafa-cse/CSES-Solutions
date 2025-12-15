@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+#define int long long
+using namespace std;
+#define all(x) x.begin(), x.end()
+vector<int> Z_algo(string &s) {
+    int n = s.size();
+    vector<int> z(n);
+    int l = 0, r = 0;
+    for (int i = 1; i < n; i++) {
+        if (i <= r) { // inside the block
+            z[i] = min(r - i + 1, z[i - l]);
+        }
+        while (i + z[i] < n and s[z[i]] == s[i + z[i]]) {
+            z[i]++;
+        }
+        if (i + z[i] - 1 > r) {
+            l = i;
+            r = i + z[i] - 1;
+        }
+    }
+    return z;
+}
+signed main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL), cout.tie(NULL);
+    string txt;
+    cin >> txt;
+
+    string pat;
+    cin >> pat;
+
+    string line  = pat + "#" + txt;
+    vector<int> ans = Z_algo(line);
+    int cnt = 0;
+    for (int i : ans) {
+        cnt += i == pat.size();
+    }
+    cout << cnt;
+    return 0;
+}
