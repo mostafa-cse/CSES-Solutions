@@ -38,12 +38,11 @@ struct Manacher {
         }
     }
 
-    // Check if original substring t[l..r] is palindrome
     bool isPalindrome(int l, int r) const {
         if (l > r) return true;
         if (n == 0) return true;
 
-        int center = l + r + 1;        // transformed index
+        int center = l + r + 1;        // transformed string index
         int need = r - l + 1;
 
         return p[center] >= need;
