@@ -3,7 +3,6 @@
 using namespace std;
 
 const int Mod = 1e9 + 7;
-
 auto kmp_automata(string &s) {
     int n = s.size();
     vector<int> pi(n);
@@ -25,7 +24,6 @@ auto kmp_automata(string &s) {
     }
     return automata;
 }
-
 signed main() {
     ios::sync_with_stdio(0); cin.tie(0); // Fast I/O
     int n;
@@ -43,9 +41,8 @@ signed main() {
 
     vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
     dp[0][0] = 1;
-
     for (int i = 1; i <= n; i++) {
-        for (int j = 0; j < m; j++) {
+        for (int j = 0; j <= m; j++) {
             for (int c = 0; c < 26; c++) {
                 int next_state = automata[j][c];
                 dp[i][next_state] = (dp[i][next_state] + dp[i - 1][j]) % Mod;
@@ -53,7 +50,6 @@ signed main() {
         }
         dp[i][m] = (dp[i][m] + 26 * dp[i - 1][m]) % Mod;
     }
-
     cout << dp[n][m] << endl;
     return 0;
 }
