@@ -1,50 +1,48 @@
 #include <bits/stdc++.h>
 #define int long long
 using namespace std;
-struct points {
-    int x, y;
-    points() {}
-    points(int _x, int _y) : x(_x), y(_y) {}
-    bool operator<(points &other) {
-        if (x != other.x) return x < other.x;
-        return y < other.y;
-    }
-};
+#define x first
+#define y second
+#ifndef ONLINE_JUDGE
+#define dout(...) cerr << "Line:" << __LINE__ << " [" << #__VA_ARGS__ << "] = ["; _print(__VA_ARGS__)
+#else
+#define dout(...)
+#endif
 signed main() {
     int n;
     cin >> n;
 
-    vector<points> a(n);
+    vector<pair<int, int>> a(n);
     for (auto &[x, y] : a) {
         cin >> x >> y;
     }
     sort(a.begin(), a.end());
 
-    int mndist = 1e18;
-    set<points> active;
-    for (int r = 0, l = 0; r < n; r++) {
-        int d = sqrtl(mndist);
+    int mndist = 8e18;
+    set<pair<int, int>> active;
+    for (int right = 0, left = 0; right < n; right++) {
+        double d = sqrt(mndist);
 
-        while (l < r and a[r].x - a[l].x >= d) {
-            active.erase(points(a[l].y, a[l].x));
-            l++;
+        while (left < right and a[right].x - a[left].x >= d) {
+            active.erase({a[left].y, a[left].x});
+            left++;
         }
 
-        auto it = active.lower_bound(points(a[r].y - d, -1e18));
+        auto it = active.lower_bound({a[right].y - d, -1e18});
         while (it != active.end()) {
-            int dx = it->x - a[r].x;
-            int dy = it->y - a[r].y;
+            int dx = it->y - a[right].x;
+            int dy = it->x - a[right].y;
 
             if (dy >= d) break;
 
             int cur = dx * dx + dy * dy;
             if (mndist > cur) {
                 mndist = cur;
-                d = sqrtl(cur);
+                d = sqrt(cur);
             }
             ++it;
         }
-        active.insert(points(a[r].y, a[r].x));
+        active.insert({a[right].y, a[right].x});
     }
     cout << mndist;
     return 0;
