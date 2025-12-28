@@ -19,14 +19,14 @@ signed main() {
     int n;
     cin >> n;
 
-    int pattern = 1e10;
+    int offset = 1e10;
 
     vector<int> x(n), y(n);
     for (int i = 0; i < n; i++) {
         cin >> x[i] >> y[i];
         // just ignore negative number
-        x[i] += pattern;
-        y[i] += pattern;
+        x[i] += offset;
+        y[i] += offset;
     }
     sort(all(x));
     sort(all(y));
