@@ -16,11 +16,14 @@ int32_t main() {
 
     int l = 0, r = 1e18, ans = -1;
     while (l <= r) {
-        __int128_t mid = (l + r) / 2;
-
-        __int128_t tot = 0;
+        int mid = l + (r - l) / 2;
+        
+        int tot = 0;
         for (int p : a) {
-            tot += (int)mid / p;
+            tot += mid / p;
+            if (tot >= k) {
+                break;
+            }
         }
 
         if (tot >= k) {
